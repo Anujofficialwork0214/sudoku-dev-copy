@@ -82,6 +82,11 @@
             active.dispatchEvent(new Event("input"));
           }
           lastBackspaceTime = now;
+          const msg = document.getElementById("exit-msg");
+          msg.style.display = "block";
+          setTimeout(() => {
+            msg.style.display = "none";
+          }, 1000);
         }
         break;
 

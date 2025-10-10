@@ -196,3 +196,12 @@ input:focus-visible {
     visibility: hidden;
   }
 }
+
+.double-exit-msg {
+  margin-top: 1px;          /* small space below grid */
+  text-align: center;
+  color: red;
+  font-style: italic;
+  font-size: 10px;
+  display: none;             /* hidden by default */
+}
