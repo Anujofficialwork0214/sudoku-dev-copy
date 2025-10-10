@@ -1,0 +1,156 @@
+@use "sass:color";
+
+$dark: #4D394B;
+$darker: #2E222D;
+$darkest: color.adjust($darker, $lightness: -5%);
+
+$primary: #4C9689;
+$invalid: #e74c3c;
+$valid: $primary;
+
+$border: 4px;
+
+/* ---------- Responsive globals ---------- */
+:root {
+  /* Cell auto-scales: tiny phones → desktops */
+  --cell: clamp(32px, 9vw, 56px);
+  --radius: 10px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  background-color: $dark;
+  color: #eee;
+}
+
+/* ---------- Board as table (crisp lines) ---------- */
+table.sudoku-container {
+  border: $border solid $darkest;      /* outer frame */
+  border-collapse: collapse;
+  background: $darker;
+  border-radius: var(--radius);
+  overflow: hidden;                    /* round corners cleanly */
+  margin: 0 auto;
+}
+
+/* Remove old fixed pseudo lines (if present) */
+.sudoku-container::before,
+.sudoku-container::after { display: none !important; }
+
+/* Cells draw the grid */
+table.sudoku-container td {
+  padding: 0;
+  border: 1px solid $darkest;          /* base thin lines */
+}
+
+/* Outer frame thickness */
+table.sudoku-container tr:first-child td { border-top-width: $border; }
+table.sudoku-container tr:last-child  td { border-bottom-width: $border; }
+table.sudoku-container tr td:first-child { border-left-width: $border; }
+table.sudoku-container tr td:last-child  { border-right-width: $border; }
+
+/* Thick 3×3 separators */
+table.sudoku-container tr:nth-child(3n) td { border-bottom-width: $border; }
+table.sudoku-container tr td:nth-child(3n) { border-right-width: $border; }
+
+/* ---------- Inputs (fluid) ---------- */
+.sudoku-container input {
+  width: var(--cell);
+  height: var(--cell);
+  text-align: center;
+  font-size: calc(var(--cell) * 0.48);
+  line-height: 1;
+  padding: 0;
+
+  /* Let td borders form the grid; use inner ring for state */
+  border: 0;
+  background-color: $darker;
+  color: #eee;
+  outline: none;
+  transition: box-shadow .15s ease, background-color .15s ease;
+
+  &:focus { box-shadow: inset 0 0 0 3px $primary; }
+
+  &.highlight { background-color: #29B6F6; }
+
+  &.disabled {
+    cursor: not-allowed;
+    background-color: $primary;
+
+    &.highlight { background-color: #29B6F6; }
+  }
+}
+
+/* Legacy margins that broke lines → remove */
+tr:nth-child(1) td:nth-child(3) input,
+tr:nth-child(1) td:nth-child(6) input,
+tr:nth-child(3) input,
+tr:nth-child(6) input { margin: 0; }
+
+/* Invalid ring without shifting layout */
+.sudoku-container .invalid {
+  box-shadow: inset 0 0 0 3px $invalid;
+  &:focus { box-shadow: inset 0 0 0 3px $invalid; }
+}
+
+/* Solved/valid frame highlight */
+.sudoku-container.valid-matrix { border-color: $valid; }
+
+/* ---------- Controls (responsive) ---------- */
+#controls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 560px;
+  margin: 12px 0 0;
+}
+
+.btn {
+  padding: 10px 14px;
+  font-size: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  &:active { transform: translateY(1px); }
+}
+
+.btn.primary {
+  background-color: $primary;
+  color: #fff;
+  box-shadow: inset 0 -3px color.adjust($primary, $lightness: -10%);
+  &:hover { box-shadow: inset 0 -3px color.adjust($primary, $lightness: -20%); }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 480px) {
+  :root { --cell: clamp(30px, 10vw, 46px); }
+  body { padding: 12px; gap: 12px; }
+  #controls { grid-template-columns: 1fr; }
+  .btn { padding: 12px 16px; font-size: 16px; }
+}
+
+/* Safe-area (notches) */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
