@@ -128,7 +128,7 @@ tr:nth-child(6) input {
 
 /* ---------- Controls (responsive) ---------- */
 #controls {
-  width: 100%;
+  width: 90vw;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
@@ -185,5 +185,46 @@ tr:nth-child(6) input {
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
 }
+/* ---------- Sudoku Keypad ---------- */
+#sudoku-keypad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* center all keypad rows */
+  justify-content: center;
+  gap: 8px;
+  width: 90vw;               /* consistent with controls */
+  max-width: 560px;          /* match desktop alignment */
+  margin: 0 auto 16px auto;  /* center horizontally */
+}
 
-/*# sourceMappingURL=style.css.map */
+.keypad-row {
+  display: flex;
+  justify-content: space-between; /* even spacing per row */
+  width: 100%;                    /* stretch row to container width */
+  gap: 8px;
+}
+
+.keypad-btn {
+  flex: 1;                        /* distribute evenly */
+  max-width: calc(20% - 6.4px);   /* keep equal width even with gaps */
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #4C9689;
+  background-color: #2E222D;
+  color: #eee;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+  box-shadow: inset 0 -3px rgba(76,150,137,0.6);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.keypad-btn:active {
+  background-color: #4C9689;
+  transform: translateY(1px);
+}
+

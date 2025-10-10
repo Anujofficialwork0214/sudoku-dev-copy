@@ -1,32 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Sudoku</title>
-    <link rel="stylesheet" href="./assets/css/style.css" />
-  </head>
-  <body>
-    <!-- NOTE: class name changed to match CSS -->
-    <div class="container">
-      <!-- Your app.js can render the <table> inside here -->
-      <!-- Example structure (if you render server-side):
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Sudoku</title>
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+
+<body>
+  <!-- NOTE: class name changed to match CSS -->
+  <div class="container">
+    <!-- Your app.js can render the <table> inside here -->
+    <!-- Example structure (if you render server-side):
       <table class="sudoku-grid">
         <tbody>
           ... 9 <tr> rows with 9 <td><input/></td> each ...
         </tbody>
       </table>
       -->
+  </div>
+
+  <div id="sudoku-keypad">
+    <!-- Row 1: 1–5 -->
+    <div class="keypad-row">
+      <button class="keypad-btn" data-num="1">1</button>
+      <button class="keypad-btn" data-num="2">2</button>
+      <button class="keypad-btn" data-num="3">3</button>
+      <button class="keypad-btn" data-num="4">4</button>
+      <button class="keypad-btn" data-num="5">5</button>
     </div>
 
-    <div id="controls">
-      <button type="button" class="btn primary" data-action="newGame">New Game</button>
-      <button type="button" class="btn primary" data-action="solve">Solve</button>
-      <button type="button" class="btn primary" data-action="validate">Validate</button>
+    <!-- Row 2: 6–9 + Clear -->
+    <div class="keypad-row">
+      <button class="keypad-btn" data-num="6">6</button>
+      <button class="keypad-btn" data-num="7">7</button>
+      <button class="keypad-btn" data-num="8">8</button>
+      <button class="keypad-btn" data-num="9">9</button>
+      <button class="keypad-btn" id="clear-btn">Clear</button>
     </div>
+  </div>
 
-    <script src="./assets/js/app.js" type="text/javascript"></script>
-    <script src="./assets/js/jiogames_sp_wrapper.js"></script>
-  </body>
+
+  <div id="controls">
+    <button type="button" class="btn primary" data-action="newGame">New Game</button>
+    <button type="button" class="btn primary" data-action="solve">Solve</button>
+    <button type="button" class="btn primary" data-action="validate">Validate</button>
+  </div>
+
+  <script src="./assets/js/app.js" type="text/javascript"></script>
+  <script src="./assets/js/jiogames_sp_wrapper.js"></script>
+  <script src="./assets/js/controls.js"></script>
+</body>
+
 </html>
