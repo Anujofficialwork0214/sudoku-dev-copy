@@ -85,12 +85,12 @@
 			this.cellMatrix[i][j] = inp;
   
 			// Mobile-friendly numeric keypad + accessibility
-			inp.type = "text";
+			inp.type = "tel";
 			inp.inputMode = "numeric";
 			inp.autocomplete = "off";
 			inp.autocorrect = "off";
 			inp.spellcheck = false;
-			inp.pattern = "[1-9]*";
+			inp.pattern = "[1-9]";
 			inp.maxLength = 1;
 			inp.setAttribute("aria-label", "Row " + (i + 1) + " Column " + (j + 1));
   
