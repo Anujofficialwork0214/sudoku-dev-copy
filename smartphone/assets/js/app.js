@@ -86,7 +86,7 @@
 
           // Mobile-friendly numeric keypad + accessibility
           inp.type = "text";
-		  inp.readOnly = true;
+		      inp.readOnly = true;
           inp.inputMode = "numeric";
           inp.autocomplete = "off";
           inp.autocorrect = "off";
@@ -245,10 +245,11 @@
         sect = this.validation.sect[sectRow][sectCol];
 
       oldNum = oldNum || "";
-
-      if (util.includes(row, oldNum)) row.splice(row.indexOf(oldNum), 1);
-      if (util.includes(col, oldNum)) col.splice(col.indexOf(oldNum), 1);
-      if (util.includes(sect, oldNum)) sect.splice(sect.indexOf(oldNum), 1);
+      if (oldNum !== "") {
+        if (util.includes(row, oldNum)) row.splice(row.indexOf(oldNum), 1);
+        if (util.includes(col, oldNum)) col.splice(col.indexOf(oldNum), 1);
+        if (util.includes(sect, oldNum)) sect.splice(sect.indexOf(oldNum), 1);
+      }
 
       if (num !== "") {
         if (
@@ -276,8 +277,10 @@
       for (var row = 0; row < 9; row++) {
         for (var col = 0; col < 9; col++) {
           val = this.matrix.row[row][col];
-          isValid = this.validateNumber(val, row, col, val);
-          this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
+          if(val !== ""){
+            isValid = this.validateNumber(val, row, col, val);
+            this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
+          }
           if (!isValid) hasError = true;
         }
       }
@@ -478,18 +481,42 @@
     },
 
     solve: function () {
-      if (!this.game.validateMatrix()) return false;
-      var ok = this.game.solveGame(0, 0);
+      var ok = this.game.solveGame(0, 0, true);
       this.game.table.classList.toggle("valid-matrix", ok);
-      if (ok) {
+      // if (ok) {
         var inputs = this.game.table.getElementsByTagName("input");
         util.each(inputs, function (i, input) {
           input.classList.add("disabled");
           input.tabIndex = -1;
         });
-      }
-      return ok;
+      // }
+      return true;
     },
+    solveDirectly: function() {
+      // Clear all cells (ignore user's wrong inputs)
+      const inputs = this.game.table.getElementsByTagName("input");
+      util.each(inputs, function(i, input) {
+        input.value = "";
+        input.classList.remove("invalid");
+      });
+
+      // Reset internal matrices
+      this.game.resetValidationMatrices();
+
+      // Solve from scratch (fills all cells)
+      this.game.solveGame(0, 0, false);
+
+      // Update UI and disable inputs
+      util.each(inputs, function(i, input) {
+        input.value = game.matrix.row[input.row][input.col]; // fill with solved value
+        input.classList.add("disabled");
+        input.tabIndex = -1;
+      });
+
+      // Mark board as solved
+      this.game.table.classList.add("valid-matrix");
+    }
+
   };
 
   global.Sudoku = Sudoku;
@@ -508,7 +535,7 @@ game.start();
 let focusedCell = null;
 
 // Cell selection
-document.querySelectorAll(".sudoku-container input").forEach(cell => {
+document.querySelectorAll(".sudoku-container input").forEach((cell) => {
   cell.addEventListener("click", function () {
     if (focusedCell) focusedCell.classList.remove("selected-cell");
     focusedCell = cell;
@@ -517,12 +544,12 @@ document.querySelectorAll(".sudoku-container input").forEach(cell => {
 });
 
 // Keypad numbers
-document.querySelectorAll(".keypad-btn").forEach(btn => {
+document.querySelectorAll(".keypad-btn").forEach((btn) => {
   btn.addEventListener("click", function () {
     if (!focusedCell || focusedCell.classList.contains("disabled")) return;
 
     if (btn.id === "clear-btn") {
-      focusedCell.value = "";
+      focusedCell.value = null;
     } else {
       focusedCell.value = btn.dataset.num;
     }
@@ -532,12 +559,25 @@ document.querySelectorAll(".keypad-btn").forEach(btn => {
   });
 });
 
-// Controls
 document.getElementById("controls").addEventListener("click", function (e) {
   var t = e.target.closest("button");
   if (!t) return;
   var action = t.dataset.action;
+  
+  // Intercept only the "solve" action
+  if (action === "solve") {
+    t.disabled = true;
+    showSolvePopup();
+    return; // stop normal call to game.solve()
+  }
+
+  // For all other actions (newGame, validate, etc.)
   if (action && typeof game[action] === "function") {
     game[action]();
+    if (action === "newGame") {
+      var solveBtn = document.querySelector('button[data-action="solve"]');
+      solveBtn.disabled = false;
+      solveBtn.classList.remove("disabled");
+    }
   }
 });

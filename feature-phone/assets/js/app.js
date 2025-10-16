@@ -268,8 +268,10 @@
 		for (var row = 0; row < 9; row++) {
 		  for (var col = 0; col < 9; col++) {
 			val = this.matrix.row[row][col];
-			isValid = this.validateNumber(val, row, col, val);
-			this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
+			if(val !== ""){
+		      isValid = this.validateNumber(val, row, col, val);
+			  this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
+			}
 			if (!isValid) hasError = true;
 		  }
 		}
