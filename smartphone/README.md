@@ -1,3 +1,2 @@
 # sudoku-dev
-
 smartphone
