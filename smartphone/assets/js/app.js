@@ -86,7 +86,7 @@
 
           // Mobile-friendly numeric keypad + accessibility
           inp.type = "text";
-		  inp.readOnly = true;
+		      inp.readOnly = true;
           inp.inputMode = "numeric";
           inp.autocomplete = "off";
           inp.autocorrect = "off";
@@ -245,10 +245,11 @@
         sect = this.validation.sect[sectRow][sectCol];
 
       oldNum = oldNum || "";
-
-      if (util.includes(row, oldNum)) row.splice(row.indexOf(oldNum), 1);
-      if (util.includes(col, oldNum)) col.splice(col.indexOf(oldNum), 1);
-      if (util.includes(sect, oldNum)) sect.splice(sect.indexOf(oldNum), 1);
+      if (oldNum !== "") {
+        if (util.includes(row, oldNum)) row.splice(row.indexOf(oldNum), 1);
+        if (util.includes(col, oldNum)) col.splice(col.indexOf(oldNum), 1);
+        if (util.includes(sect, oldNum)) sect.splice(sect.indexOf(oldNum), 1);
+      }
 
       if (num !== "") {
         if (
@@ -276,8 +277,10 @@
       for (var row = 0; row < 9; row++) {
         for (var col = 0; col < 9; col++) {
           val = this.matrix.row[row][col];
-          isValid = this.validateNumber(val, row, col, val);
-          this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
+          if(val !== ""){
+            isValid = this.validateNumber(val, row, col, val);
+            this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
+          }
           if (!isValid) hasError = true;
         }
       }
@@ -508,7 +511,7 @@ game.start();
 let focusedCell = null;
 
 // Cell selection
-document.querySelectorAll(".sudoku-container input").forEach(cell => {
+document.querySelectorAll(".sudoku-container input").forEach((cell) => {
   cell.addEventListener("click", function () {
     if (focusedCell) focusedCell.classList.remove("selected-cell");
     focusedCell = cell;
@@ -517,12 +520,12 @@ document.querySelectorAll(".sudoku-container input").forEach(cell => {
 });
 
 // Keypad numbers
-document.querySelectorAll(".keypad-btn").forEach(btn => {
+document.querySelectorAll(".keypad-btn").forEach((btn) => {
   btn.addEventListener("click", function () {
     if (!focusedCell || focusedCell.classList.contains("disabled")) return;
 
     if (btn.id === "clear-btn") {
-      focusedCell.value = "";
+      focusedCell.value = null;
     } else {
       focusedCell.value = btn.dataset.num;
     }
