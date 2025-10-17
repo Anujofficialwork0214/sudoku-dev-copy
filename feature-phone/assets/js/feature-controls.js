@@ -57,7 +57,8 @@
 
       // SoftLeft → solve
       case "SoftLeft":
-        game.solve();
+        showToast("Here are solutions");
+        game.solveDirectly();
         break;
 
       // SoftRight → New Game

@@ -482,6 +482,30 @@
 		}
 		return ok;
 	  },
+	  solveDirectly: function() {
+      // Clear all cells (ignore user's wrong inputs)
+      const inputs = this.game.table.getElementsByTagName("input");
+      util.each(inputs, function(i, input) {
+        input.value = "";
+        input.classList.remove("invalid");
+      });
+
+      // Reset internal matrices
+      this.game.resetValidationMatrices();
+
+      // Solve from scratch (fills all cells)
+      this.game.solveGame(0, 0, false);
+
+      // Update UI and disable inputs
+      util.each(inputs, function(i, input) {
+        input.value = game.matrix.row[input.row][input.col]; // fill with solved value
+        input.classList.add("disabled");
+        input.tabIndex = -1;
+      });
+
+      // Mark board as solved
+      this.game.table.classList.add("valid-matrix");
+    }
 	};
   
 	global.Sudoku = Sudoku;
