@@ -57,15 +57,15 @@
 
       // SoftLeft → solve
       case "SoftLeft":
-        showToast("Here are solutions");
+        showToast("Here are solutions", 1200, "#68DD24E6");
         game.solveDirectly();
         break;
 
       // SoftRight → New Game
       case "SoftRight":
-        game.newGame();
+        showToast("New Game Started 🔄", 1200, "#68DD24E6");
         setTimeout(focusFirstEditable, 50);
-        showToast("New Game Started 🔄");
+        game.newGame();
         break;
 
       // Clear cell
@@ -73,7 +73,7 @@
         const now = Date.now();
         if (now - lastBackspaceTime < DOUBLE_PRESS_DELAY) {
           // double press → exit game
-          showToast("Exiting game...");
+          showToast("Exiting game...", 1200, "#68DD24E6");
           console.log("Exit app"); // replace with real exit logic
           lastBackspaceTime = 0;
         } else {

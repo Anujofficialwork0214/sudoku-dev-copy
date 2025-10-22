@@ -54,6 +54,7 @@
 	  this.matrix = {};
 	  this.validation = {};
 	  this.values = [];
+	  this.mistakeCount = 0;
   
 	  this.resetValidationMatrices();
 	  return this;
@@ -171,6 +172,20 @@
 		if (this.config.validate_on_insert && val !== "") {
 		  var ok = this.validateNumber(val, row, col, oldVal);
 		  input.classList.toggle("invalid", !ok);
+		  if (!ok) {
+			this.mistakeCount += 1;
+			updateMistakeCounter(this.mistakeCount);
+			if ( this.mistakeCount >= 5 ){
+				gameOver();
+			}
+		  }
+		}
+		// Check if board is fully filled and valid
+		if (this.validateMatrix() ) {
+			const allFilled = Object.values(this.matrix.row).every(r => r.every(v => v !== ""));
+			if (allFilled) {
+				gameWon();
+			}
 		}
 	  },
   
@@ -202,6 +217,8 @@
 	  },
   
 	  resetGame: function () {
+		this.mistakeCount = 0;
+		updateMistakeCounter(this.mistakeCount);
 		this.resetValidationMatrices();
 		for (var row = 0; row < 9; row++) {
 		  for (var col = 0; col < 9; col++) {
@@ -517,14 +534,17 @@
   var game = new Sudoku(".container");
   game.start();
 
-  function showToast(message, duration = 1200) {
+  function showToast(message, duration = 1200, bgColor = "rgba(104, 221, 36, 0.9)") {
 	const toast = document.getElementById("toast");
 	if (!toast) return;
 
 	toast.textContent = message;
+	toast.style.background = bgColor;
 	toast.style.display = "block";
 
-	setTimeout(() => {
+    clearTimeout(toast.hideTimeout);
+	toast.hideTimeout = setTimeout(() => {
+		toast.style.background = "rgba(104, 221, 36, 0.9)";
 		toast.style.display = "none";
 	}, duration);
 }
@@ -559,3 +579,25 @@
 	}
   });
   
+function gameOver() {
+  showToast("Game Over! Starting new game...",1200, "#FF0000");
+  setTimeout(() => {
+    game.reset();
+    game.start();
+  }, 2000); // restart after toast hides
+}
+function updateMistakeCounter(count) {
+  const span = document.getElementById("mistakeCount");
+  if (span) {
+    span.textContent = count; 
+  }
+}
+
+function gameWon(){
+	showToast("🎉 You Won!", 1500);
+	setTimeout(() => {
+		game.reset();
+		game.start();
+	}, 2000); // restart after toast hides
+
+}
