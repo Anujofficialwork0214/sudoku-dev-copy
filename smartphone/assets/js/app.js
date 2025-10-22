@@ -87,7 +87,7 @@
 
           // Mobile-friendly numeric keypad + accessibility
           inp.type = "text";
-		      inp.readOnly = true;
+          inp.readOnly = true;
           inp.inputMode = "numeric";
           inp.autocomplete = "off";
           inp.autocorrect = "off";
@@ -177,8 +177,29 @@
         if (!ok) {
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
-          if ( this.mistakeCount >= 5 ){
+          if (this.mistakeCount >= 5) {
             gameOver();
+          }
+        }
+      }
+      if (this.validateMatrix()) {
+        var allFilled = true;
+        var inputs = this.game.table.getElementsByTagName("input");
+        for (var i = 0; i < inputs.length; i++) {
+          if (
+            inputs[i].value === "" ||
+            inputs[i].classList.contains("invalid")
+          ) {
+            allFilled = false;
+            break;
+          }
+        }
+
+        if (allFilled) {
+          // Show game won popup
+          const gameWonPopup = document.getElementById("gameWon");
+          if (gameWonPopup) {
+            gameWonPopup.style.display = "flex";
           }
         }
       }
@@ -287,7 +308,7 @@
       for (var row = 0; row < 9; row++) {
         for (var col = 0; col < 9; col++) {
           val = this.matrix.row[row][col];
-          if(val !== ""){
+          if (val !== "") {
             isValid = this.validateNumber(val, row, col, val);
             this.cellMatrix[row][col].classList.toggle("invalid", !isValid);
           }
@@ -494,18 +515,18 @@
       var ok = this.game.solveGame(0, 0, true);
       this.game.table.classList.toggle("valid-matrix", ok);
       // if (ok) {
-        var inputs = this.game.table.getElementsByTagName("input");
-        util.each(inputs, function (i, input) {
-          input.classList.add("disabled");
-          input.tabIndex = -1;
-        });
+      var inputs = this.game.table.getElementsByTagName("input");
+      util.each(inputs, function (i, input) {
+        input.classList.add("disabled");
+        input.tabIndex = -1;
+      });
       // }
       return true;
     },
-    solveDirectly: function() {
+    solveDirectly: function () {
       // Clear all cells (ignore user's wrong inputs)
       const inputs = this.game.table.getElementsByTagName("input");
-      util.each(inputs, function(i, input) {
+      util.each(inputs, function (i, input) {
         input.value = "";
         input.classList.remove("invalid");
       });
@@ -517,7 +538,7 @@
       this.game.solveGame(0, 0, false);
 
       // Update UI and disable inputs
-      util.each(inputs, function(i, input) {
+      util.each(inputs, function (i, input) {
         input.value = game.matrix.row[input.row][input.col]; // fill with solved value
         input.classList.add("disabled");
         input.tabIndex = -1;
@@ -525,8 +546,7 @@
 
       // Mark board as solved
       this.game.table.classList.add("valid-matrix");
-    }
-
+    },
   };
 
   global.Sudoku = Sudoku;
@@ -573,7 +593,7 @@ document.getElementById("controls").addEventListener("click", function (e) {
   var t = e.target.closest("button");
   if (!t) return;
   var action = t.dataset.action;
-  
+
   // Intercept only the "solve" action
   if (action === "solve") {
     t.disabled = true;
@@ -608,6 +628,8 @@ document.getElementById("restartGame").addEventListener("click", function () {
   // Hide the game over popup
   const popup = document.getElementById("gameOverPopUp");
   if (popup) popup.style.display = "none";
+  const gameWonPopup = document.getElementById("gameWon");
+  if (gameWonPopup) gameWonPopup.style.display = "none";
 
   // Reset and start a new game
   game.reset();

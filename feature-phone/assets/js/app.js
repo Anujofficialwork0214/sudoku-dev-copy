@@ -180,6 +180,13 @@
 			}
 		  }
 		}
+		// Check if board is fully filled and valid
+		if (this.validateMatrix() ) {
+			const allFilled = Object.values(this.matrix.row).every(r => r.every(v => v !== ""));
+			if (allFilled) {
+				gameWon();
+			}
+		}
 	  },
   
 	  onKeyNav: function (e) {
@@ -584,4 +591,13 @@ function updateMistakeCounter(count) {
   if (span) {
     span.textContent = count; 
   }
+}
+
+function gameWon(){
+	showToast("🎉 You Won!", 1500, "rgba(34, 66, 16, 1.0)");
+	setTimeout(() => {
+		game.reset();
+		game.start();
+	}, 2000); // restart after toast hides
+
 }
