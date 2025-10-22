@@ -174,6 +174,7 @@
 		  input.classList.toggle("invalid", !ok);
 		  if (!ok) {
 			this.mistakeCount += 1;
+			updateMistakeCounter(this.mistakeCount);
 			if ( this.mistakeCount >= 5 ){
 				gameOver();
 			}
@@ -210,6 +211,7 @@
   
 	  resetGame: function () {
 		this.mistakeCount = 0;
+		updateMistakeCounter(this.mistakeCount);
 		this.resetValidationMatrices();
 		for (var row = 0; row < 9; row++) {
 		  for (var col = 0; col < 9; col++) {
@@ -576,4 +578,10 @@ function gameOver() {
     game.reset();
     game.start();
   }, 2000); // restart after toast hides
+}
+function updateMistakeCounter(count) {
+  const span = document.getElementById("mistakeCount");
+  if (span) {
+    span.textContent = count; 
+  }
 }
