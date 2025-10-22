@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "version_code": 1,
   "name": "Sudoku",
-  "package_name": "game.sudoku.com",
+  "package_name": "com.kaifoundry.sudoku.jp",
   "description": "Game Description",
   "launch_path": "/index.html",
   "icons": {    
