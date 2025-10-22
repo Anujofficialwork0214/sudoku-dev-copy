@@ -182,9 +182,10 @@
           }
         }
       }
+      // Check for game completion on input
       if (this.validateMatrix()) {
         var allFilled = true;
-        var inputs = this.game.table.getElementsByTagName("input");
+        var inputs = this.table.getElementsByTagName("input");
         for (var i = 0; i < inputs.length; i++) {
           if (
             inputs[i].value === "" ||
@@ -631,10 +632,27 @@ document.getElementById("restartGame").addEventListener("click", function () {
   const gameWonPopup = document.getElementById("gameWon");
   if (gameWonPopup) gameWonPopup.style.display = "none";
 
+  var solveBtn = document.querySelector('button[data-action="solve"]');
+  solveBtn.disabled = false;
+  solveBtn.classList.remove("disabled");
   // Reset and start a new game
   game.reset();
   game.start();
 });
+
+document
+  .getElementById("restartGameWon")
+  .addEventListener("click", function () {
+    const gameWonPopup = document.getElementById("gameWon");
+    if (gameWonPopup) gameWonPopup.style.display = "none";
+
+    var solveBtn = document.querySelector('button[data-action="solve"]');
+    solveBtn.disabled = false;
+    solveBtn.classList.remove("disabled");
+    // Reset and start a new game
+    game.reset();
+    game.start();
+  });
 
 function updateMistakeCounter(count) {
   const span = document.getElementById("mistakeCount");
