@@ -54,6 +54,7 @@
     this.matrix = {};
     this.validation = {};
     this.values = [];
+    this.mistakeCount = 0;
 
     this.resetValidationMatrices();
     return this;
@@ -173,6 +174,12 @@
       if (this.config.validate_on_insert && val !== "") {
         var ok = this.validateNumber(val, row, col, oldVal);
         input.classList.toggle("invalid", !ok);
+        if (!ok) {
+          this.mistakeCount += 1;
+          if ( this.mistakeCount >= 5 ){
+            gameOver();
+          }
+        }
       }
     },
 
@@ -204,6 +211,7 @@
     },
 
     resetGame: function () {
+      this.mistakeCount = 0;
       this.resetValidationMatrices();
       for (var row = 0; row < 9; row++) {
         for (var col = 0; col < 9; col++) {
@@ -580,4 +588,26 @@ document.getElementById("controls").addEventListener("click", function (e) {
       solveBtn.classList.remove("disabled");
     }
   }
+});
+
+function gameOver() {
+  // alert("Game Over! You have made more than 10 mistakes.");
+
+  // ✅ use document.getElementById (not just getElementById)
+  const gameOverPopup = document.getElementById("gameOverPopUp");
+
+  if (gameOverPopup) {
+    gameOverPopup.style.display = "flex";
+  }
+}
+
+// Restart Game button listener
+document.getElementById("restartGame").addEventListener("click", function () {
+  // Hide the game over popup
+  const popup = document.getElementById("gameOverPopUp");
+  if (popup) popup.style.display = "none";
+
+  // Reset and start a new game
+  game.reset();
+  game.start();
 });
