@@ -594,7 +594,7 @@ function updateMistakeCounter(count) {
 }
 
 function gameWon(){
-	showToast("🎉 You Won!", 1500, "rgba(34, 66, 16, 1.0)");
+	showToast("🎉 You Won!", 1500);
 	setTimeout(() => {
 		game.reset();
 		game.start();
