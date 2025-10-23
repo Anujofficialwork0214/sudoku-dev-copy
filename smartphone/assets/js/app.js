@@ -1,3 +1,6 @@
+const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
+let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex')) || 0;
+// console.log("Loaded difficulty index from storage:", currentDifficultyIndex);
 (function (global) {
   "use strict";
 
@@ -41,7 +44,7 @@
    * ========================= */
   var defaultConfig = {
     validate_on_insert: true,
-    difficulty: "normal", // easy (50 givens), normal (40), hard (30)
+    difficulty: difficultyOrder[currentDifficultyIndex], // easy, medium, hard, pro, expert
   };
 
   /* =========================
@@ -202,6 +205,19 @@
           if (gameWonPopup) {
             gameWonPopup.style.display = "flex";
           }
+          // ✅ Move to next difficulty for next round
+          if (currentDifficultyIndex < difficultyOrder.length - 1) {
+            currentDifficultyIndex++;
+            console.log("Increasing difficulty index to:", currentDifficultyIndex);
+            game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
+            localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+          } else {
+            // If already at max difficulty, stay at expert
+            currentDifficultyIndex = difficultyOrder.length - 1;
+            localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+          }
+
+          // console.log("Next game difficulty:", game.game.config.difficulty);
         }
       }
     },
@@ -466,15 +482,18 @@
     },
 
     start: function () {
+      updateDifficultyDisplay(difficultyOrder[currentDifficultyIndex]);
       var arr = [],
         x = 0,
         values,
         rows = this.game.matrix.row,
         inputs = this.game.table.getElementsByTagName("input"),
         difficulties = {
-          easy: 50,
-          normal: 40,
-          hard: 30,
+          easy: 80,
+          medium: 78,
+          hard: 77,
+          pro: 76,
+          expert: 75,
         };
 
       // Solve a blank board to get a full solution
@@ -488,7 +507,8 @@
       });
 
       // Choose givens based on difficulty
-      values = getUnique(arr, difficulties[this.game.config.difficulty]);
+      const currentDifficulty = this.game.config.difficulty;
+      values = getUnique(arr, difficulties[currentDifficulty]);
 
       // Reset, then fill givens
       this.reset();
@@ -659,4 +679,9 @@ function updateMistakeCounter(count) {
   if (span) {
     span.textContent = count;
   }
+}
+
+function updateDifficultyDisplay( currentDifficulty ) {
+  const display = document.getElementById('difficultyDisplay');
+  display.textContent = `${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}`;
 }

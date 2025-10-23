@@ -28,13 +28,6 @@ body {
   overflow: hidden;
 }
 
-#mistakes-counter {
-  color: #ffffff;
-  font-size: 14px;
-  margin-bottom: 1px;
-  margin-top: 10px;
-}
-
 /* ---------- Sudoku Board ---------- */
 table.sudoku-container {
   width: 100%;
@@ -208,4 +201,17 @@ input:focus-visible {
   font-style: italic;
   font-size: 10px;
   display: none;             /* hidden by default */
+}
+
+.topbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;            
+  padding: 8px 0px 5px 0px;
+  font-size: 12px;
+  color: #ffffff;
+}
+.topbar p span {
+  font-weight: bold;
 }

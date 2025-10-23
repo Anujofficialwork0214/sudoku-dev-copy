@@ -2,12 +2,13 @@
   "version": "1.0.0",
   "version_code": 1,
   "name": "Sudoku",
-  "package_name": "game.sudoku.com",
-  "description": "Game Description",
+  "package_name": "com.kaifoundry.sudoku.jp",
+  "description": "Fill every row, column and 3×3 box with digits 1–9 — sharpen your logic and beat the puzzle.",
   "launch_path": "/index.html",
   "icons": {    
 	"56": "/assets/icons/logo.png",
-    "128": "/assets/icons/logo.png"
+    "128": "/assets/icons/logo.png",
+	"112": "/assets/icons/logo.png"
   },
   "developer": {
     "name": "JioGames Studios",

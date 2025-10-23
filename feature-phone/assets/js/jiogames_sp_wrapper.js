@@ -1,12 +1,12 @@
 //#region "Variable"
 var adSpotInterstitial = "zbjnq9gs";
 var adSpotRewardedVideo = "81xnt9bw";
-var packageName = "com.jiogames.testsp";
+var packageName = "com.kaifoundry.sudoku.jp";
 var isAdReady = false;
 var isRVReady = false;
 
 var banner_ZoneKey = "l9mp2wfq";
-var bannerPackageName = "com.jiogames.test";
+var bannerPackageName = "com.kaifoundry.sudoku.jp";
 
 //#endregion
 
