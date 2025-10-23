@@ -200,24 +200,21 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
         }
 
         if (allFilled) {
-          // Show game won popup
           const gameWonPopup = document.getElementById("gameWon");
           if (gameWonPopup) {
+            // Move to next difficulty for next round
+            if (currentDifficultyIndex < difficultyOrder.length - 1) {
+              currentDifficultyIndex++;
+              game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
+              localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+            } else {
+              // If already at max difficulty, stay at expert
+              currentDifficultyIndex = difficultyOrder.length - 1;
+              localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+            }
+            
             gameWonPopup.style.display = "flex";
           }
-          // ✅ Move to next difficulty for next round
-          if (currentDifficultyIndex < difficultyOrder.length - 1) {
-            currentDifficultyIndex++;
-            console.log("Increasing difficulty index to:", currentDifficultyIndex);
-            game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
-            localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
-          } else {
-            // If already at max difficulty, stay at expert
-            currentDifficultyIndex = difficultyOrder.length - 1;
-            localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
-          }
-
-          // console.log("Next game difficulty:", game.game.config.difficulty);
         }
       }
     },

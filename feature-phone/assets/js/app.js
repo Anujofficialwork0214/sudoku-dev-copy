@@ -44,7 +44,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 	 * ========================= */
 	var defaultConfig = {
 	  validate_on_insert: true,
-	  difficulty: "normal", // easy (50 givens), normal (40), hard (30)
+	  difficulty: difficultyOrder[currentDifficultyIndex], // easy (50 givens), normal (40), hard (30)
 	};
   
 	/* =========================
@@ -187,6 +187,17 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 		if (this.validateMatrix() ) {
 			const allFilled = Object.values(this.matrix.row).every(r => r.every(v => v !== ""));
 			if (allFilled) {
+				// ✅ Move to next difficulty for next round
+				if (currentDifficultyIndex < difficultyOrder.length - 1) {
+					currentDifficultyIndex++;
+					console.log("Increasing difficulty index to:", currentDifficultyIndex);
+					game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
+					localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+				} else {
+					// If already at max difficulty, stay at expert
+					currentDifficultyIndex = difficultyOrder.length - 1;
+					localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+				}
 				gameWon();
 			}
 		}
@@ -442,18 +453,19 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 	  },
   
 	  start: function () {
+		updateDifficultyDisplay(difficultyOrder[currentDifficultyIndex]);
 		var arr = [],
 		  x = 0,
 		  values,
 		  rows = this.game.matrix.row,
 		  inputs = this.game.table.getElementsByTagName("input"),
 		  difficulties = {
-			easy: 80,
-			medium: 78,
-			hard: 77,
-			pro: 76,
-			expert: 75,
-			};
+			easy: 70,
+			medium: 60,
+			hard: 50,
+			pro: 40,
+			expert: 30,
+		 };
   
 		// Solve a blank board to get a full solution
 		this.game.solveGame(0, 0);
@@ -605,4 +617,9 @@ function gameWon(){
 		game.start();
 	}, 2000); // restart after toast hides
 
+}
+
+function updateDifficultyDisplay( currentDifficulty ) {
+  const display = document.getElementById('difficultyDisplay');
+  display.textContent = `${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}`;
 }
