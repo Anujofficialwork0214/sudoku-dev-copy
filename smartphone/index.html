@@ -10,10 +10,11 @@
 
 <body>
   <!-- NOTE: class name changed to match CSS -->
-   <div id="mistakes-counter">
-     Mistakes: <span id="mistakeCount">0</span>/5 
-   </div>
   <div class="container">
+    <div id="mistakes-counter" class="topbar">
+      <p>Mistakes: <span id="mistakeCount">0</span>/5</p>
+      <p>Level: <span id="difficultyDisplay">Easy</span></p>
+    </div>
     <!-- Your app.js can render the <table> inside here -->
     <!-- Example structure (if you render server-side):
       <table class="sudoku-grid">
@@ -72,9 +73,10 @@
   <div id="gameWon" class="popup-overlay">
     <div class="popup-box">
       <h3>🎉 Great You Won!</h3>
-      <p>Congratulations! Keep up the great work and aim even higher!</p>      
+      <p>Congratulations! Keep up the great work and aim even higher!</p>
       <div class="popup-buttons">
-        <button type="button" class="btn primary" id="restartGameWon" data-action="restartGame">Restart Game</button>
+        <button type="button" class="btn primary" id="restartGameWon" data-action="restartGame">Start Next
+          Level</button>
       </div>
     </div>
   </div>
