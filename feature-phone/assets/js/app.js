@@ -1,3 +1,6 @@
+const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
+let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex')) || 0;
+
 (function (global) {
 	"use strict";
   
@@ -445,10 +448,12 @@
 		  rows = this.game.matrix.row,
 		  inputs = this.game.table.getElementsByTagName("input"),
 		  difficulties = {
-			easy: 50,
-			normal: 40,
-			hard: 30,
-		  };
+			easy: 80,
+			medium: 78,
+			hard: 77,
+			pro: 76,
+			expert: 75,
+			};
   
 		// Solve a blank board to get a full solution
 		this.game.solveGame(0, 0);

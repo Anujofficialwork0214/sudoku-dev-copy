@@ -489,11 +489,11 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
         rows = this.game.matrix.row,
         inputs = this.game.table.getElementsByTagName("input"),
         difficulties = {
-          easy: 80,
-          medium: 78,
-          hard: 77,
-          pro: 76,
-          expert: 75,
+          easy: 70,
+          medium: 60,
+          hard: 50,
+          pro: 40,
+          expert: 30,
         };
 
       // Solve a blank board to get a full solution
