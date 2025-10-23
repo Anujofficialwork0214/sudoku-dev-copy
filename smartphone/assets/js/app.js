@@ -1,6 +1,6 @@
 const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
 let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex')) || 0;
-console.log("Loaded difficulty index from storage:", currentDifficultyIndex);
+// console.log("Loaded difficulty index from storage:", currentDifficultyIndex);
 (function (global) {
   "use strict";
 
