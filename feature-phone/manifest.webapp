@@ -7,7 +7,8 @@
   "launch_path": "/index.html",
   "icons": {    
 	"56": "/assets/icons/logo.png",
-    "128": "/assets/icons/logo.png"
+    "128": "/assets/icons/logo.png",
+	"112": "/assets/icons/logo.png"
   },
   "developer": {
     "name": "JioGames Studios",
