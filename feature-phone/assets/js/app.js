@@ -44,7 +44,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 	 * ========================= */
 	var defaultConfig = {
 	  validate_on_insert: true,
-	  difficulty: difficultyOrder[currentDifficultyIndex], // easy (50 givens), normal (40), hard (30)
+	  difficulty: difficultyOrder[currentDifficultyIndex], 
 	};
   
 	/* =========================
@@ -58,6 +58,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 	  this.validation = {};
 	  this.values = [];
 	  this.mistakeCount = 0;
+	  this.isSolvedDirectly = false;
   
 	  this.resetValidationMatrices();
 	  return this;
@@ -175,7 +176,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 		if (this.config.validate_on_insert && val !== "") {
 		  var ok = this.validateNumber(val, row, col, oldVal);
 		  input.classList.toggle("invalid", !ok);
-		  if (!ok) {
+		  if (!ok && !this.isSolvedDirectly) {
 			this.mistakeCount += 1;
 			updateMistakeCounter(this.mistakeCount);
 			if ( this.mistakeCount >= 5 ){
@@ -183,21 +184,25 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 			}
 		  }
 		}
+	    if (this.isSolvedDirectly) {
+			const msg = document.getElementById("exit-msg");
+			msg.style.display = "block";
+			msg.innerText = "Editing Already Solved! please start New Game";
+			setTimeout(() => {
+				msg.style.display = "none";
+			}, 1000);
+			return;
+		}
 		// Check if board is fully filled and valid
 		if (this.validateMatrix() ) {
 			const allFilled = Object.values(this.matrix.row).every(r => r.every(v => v !== ""));
 			if (allFilled) {
 				// ✅ Move to next difficulty for next round
 				if (currentDifficultyIndex < difficultyOrder.length - 1) {
-					currentDifficultyIndex++;
-					console.log("Increasing difficulty index to:", currentDifficultyIndex);
-					game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
-					localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
-				} else {
-					// If already at max difficulty, stay at expert
-					currentDifficultyIndex = difficultyOrder.length - 1;
-					localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+				currentDifficultyIndex++;
 				}
+				game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
+				localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
 				gameWon();
 			}
 		}
@@ -469,6 +474,8 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
   
 		// Solve a blank board to get a full solution
 		this.game.solveGame(0, 0);
+		this.solvedMatrix = JSON.parse(JSON.stringify(this.game.matrix.row));
+
   
 		util.each(rows, function (i, row) {
 		  util.each(row, function (r, val) {
@@ -494,6 +501,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 	  },
   
 	  reset: function () {
+		this.game.isSolvedDirectly = false;
 		this.game.resetGame();
 	  },
   
@@ -504,40 +512,16 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 	  },
   
 	  solve: function () {
-		if (!this.game.validateMatrix()) return false;
-		var ok = this.game.solveGame(0, 0);
-		this.game.table.classList.toggle("valid-matrix", ok);
-		if (ok) {
-		  var inputs = this.game.table.getElementsByTagName("input");
-		  util.each(inputs, function (i, input) {
-			input.classList.add("disabled");
-			input.tabIndex = -1;
-		  });
-		}
-		return ok;
-	  },
-	  solveDirectly: function() {
-      // Clear all cells (ignore user's wrong inputs)
-      const inputs = this.game.table.getElementsByTagName("input");
-      util.each(inputs, function(i, input) {
-        input.value = "";
-        input.classList.remove("invalid");
-      });
+      this.game.isSolvedDirectly = true;
+      const rows = this.solvedMatrix;
 
-      // Reset internal matrices
-      this.game.resetValidationMatrices();
-
-      // Solve from scratch (fills all cells)
-      this.game.solveGame(0, 0, false);
-
-      // Update UI and disable inputs
-      util.each(inputs, function(i, input) {
-        input.value = game.matrix.row[input.row][input.col]; // fill with solved value
-        input.classList.add("disabled");
-        input.tabIndex = -1;
-      });
-
-      // Mark board as solved
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          const input = this.game.cellMatrix[r][c];
+          input.value = rows[r][c];
+          input.classList.remove("invalid");
+        }
+      }
       this.game.table.classList.add("valid-matrix");
     }
 	};
@@ -611,7 +595,11 @@ function updateMistakeCounter(count) {
 }
 
 function gameWon(){
-	showToast("🎉 You Won!", 1500);
+	if(currentDifficultyIndex === difficultyOrder.length - 1){
+		showToast("🎉 Congratulation you are on highest level restarting game!", 1500);
+	}else{
+		showToast("🎉 You Won starting new level!", 1500);
+	}
 	setTimeout(() => {
 		game.reset();
 		game.start();

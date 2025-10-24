@@ -52,13 +52,12 @@
 
       // Enter → Validate Sudoku
       case "Enter":
-        const valid = game.validate();
         break;
 
       // SoftLeft → solve
       case "SoftLeft":
         showToast("Here are solutions", 1200, "#68DD24E6");
-        game.solveDirectly();
+        game.solve();
         break;
 
       // SoftRight → New Game
