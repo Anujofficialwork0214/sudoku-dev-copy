@@ -1,5 +1,6 @@
 const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
-let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex')) || 0;
+let currentDifficultyIndex =
+  Number(localStorage.getItem("currentDifficultyIndex")) || 0;
 // console.log("Loaded difficulty index from storage:", currentDifficultyIndex);
 (function (global) {
   "use strict";
@@ -58,6 +59,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
     this.validation = {};
     this.values = [];
     this.mistakeCount = 0;
+    this.isSolvedDirectly = false;
 
     this.resetValidationMatrices();
     return this;
@@ -177,7 +179,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
       if (this.config.validate_on_insert && val !== "") {
         var ok = this.validateNumber(val, row, col, oldVal);
         input.classList.toggle("invalid", !ok);
-        if (!ok) {
+        if (!ok && !this.isSolvedDirectly) {
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
           if (this.mistakeCount >= 5) {
@@ -185,6 +187,11 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
           }
         }
       }
+      if (this.isSolvedDirectly) {
+        showPopupMessage("You are editing already solved sudoku. Click on New Game to start new game");
+        return;
+      }
+
       // Check for game completion on input
       if (this.validateMatrix()) {
         var allFilled = true;
@@ -201,18 +208,20 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 
         if (allFilled) {
           const gameWonPopup = document.getElementById("gameWon");
+          const restartGameWon = document.getElementById("restartGameWon");
+          const gameWonSubmessage = document.getElementById("gameWonSubmessage");
           if (gameWonPopup) {
             // Move to next difficulty for next round
+            if(currentDifficultyIndex == difficultyOrder.length - 1){
+              gameWonSubmessage.innerText = "Amazing! You are on the highest difficulty level!";
+              restartGameWon.innerText = "Restart Expert Game";
+            }
             if (currentDifficultyIndex < difficultyOrder.length - 1) {
               currentDifficultyIndex++;
-              game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
-              localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
-            } else {
-              // If already at max difficulty, stay at expert
-              currentDifficultyIndex = difficultyOrder.length - 1;
-              localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
             }
-            
+            game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
+            localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+
             gameWonPopup.style.display = "flex";
           }
         }
@@ -495,6 +504,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
 
       // Solve a blank board to get a full solution
       this.game.solveGame(0, 0);
+      this.solvedMatrix = JSON.parse(JSON.stringify(this.game.matrix.row));
 
       util.each(rows, function (i, row) {
         util.each(row, function (r, val) {
@@ -520,6 +530,7 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
     },
 
     reset: function () {
+      this.game.isSolvedDirectly = false;
       this.game.resetGame();
     },
 
@@ -530,39 +541,16 @@ let currentDifficultyIndex = Number(localStorage.getItem('currentDifficultyIndex
     },
 
     solve: function () {
-      var ok = this.game.solveGame(0, 0, true);
-      this.game.table.classList.toggle("valid-matrix", ok);
-      // if (ok) {
-      var inputs = this.game.table.getElementsByTagName("input");
-      util.each(inputs, function (i, input) {
-        input.classList.add("disabled");
-        input.tabIndex = -1;
-      });
-      // }
-      return true;
-    },
-    solveDirectly: function () {
-      // Clear all cells (ignore user's wrong inputs)
-      const inputs = this.game.table.getElementsByTagName("input");
-      util.each(inputs, function (i, input) {
-        input.value = "";
-        input.classList.remove("invalid");
-      });
+      this.game.isSolvedDirectly = true;
+      const rows = this.solvedMatrix;
 
-      // Reset internal matrices
-      this.game.resetValidationMatrices();
-
-      // Solve from scratch (fills all cells)
-      this.game.solveGame(0, 0, false);
-
-      // Update UI and disable inputs
-      // util.each(inputs, function (i, input) {
-      //   input.value = game.matrix.row[input.row][input.col]; // fill with solved value
-      //   input.classList.add("disabled");
-      //   input.tabIndex = -1;
-      // });
-
-      // Mark board as solved
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          const input = this.game.cellMatrix[r][c];
+          input.value = rows[r][c];
+          input.classList.remove("invalid");
+        }
+      }
       this.game.table.classList.add("valid-matrix");
     },
   };
