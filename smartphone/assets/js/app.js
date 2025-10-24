@@ -176,7 +176,7 @@ let currentDifficultyIndex =
       this.matrix.col[col][row] = val;
       this.matrix.sect[sectRow][sectCol][secIndex] = val;
 
-      if (this.config.validate_on_insert && val !== "") {
+      if (this.config.validate_on_insert ) {
         var ok = this.validateNumber(val, row, col, oldVal);
         input.classList.toggle("invalid", !ok);
         if (!ok && !this.isSolvedDirectly) {
@@ -585,7 +585,7 @@ document.querySelectorAll(".keypad-btn").forEach((btn) => {
     if (!focusedCell || focusedCell.classList.contains("disabled")) return;
 
     if (btn.id === "clear-btn") {
-      focusedCell.value = null;
+      focusedCell.value = "";
     } else {
       focusedCell.value = btn.dataset.num;
     }
