@@ -47,10 +47,10 @@
 
 
   <div id="controls">
-    <button type="button" class="btn primary" data-action="validate">Validate</button>
     <button type="button" class="btn primary" data-action="solve">Solve</button>
     <button type="button" class="btn primary" data-action="newGame">New Game</button>
   </div>
+  <p id="popup-message"></p>
   <div id="solvePopup" class="popup-overlay">
     <div class="popup-box">
       <h3>Are you sure?</h3>
@@ -73,7 +73,7 @@
   <div id="gameWon" class="popup-overlay">
     <div class="popup-box">
       <h3>🎉 Great You Won!</h3>
-      <p>Congratulations! Keep up the great work and aim even higher!</p>
+      <p id="gameWonSubmessage">Congratulations! Keep up the great work and aim even higher!</p>
       <div class="popup-buttons">
         <button type="button" class="btn primary" id="restartGameWon" data-action="restartGame">Start Next
           Level</button>

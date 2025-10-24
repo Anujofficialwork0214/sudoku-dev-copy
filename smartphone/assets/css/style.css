@@ -130,7 +130,7 @@ tr:nth-child(6) input {
 #controls {
   width: 90vw;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   max-width: 560px;
   margin: 12px 0 0;
@@ -281,4 +281,12 @@ tr:nth-child(6) input {
 }
 .topbar p span {
   font-weight: bold;
+}
+#popup-message {
+  color: red;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#popup-message.show {
+  opacity: 1;
 }
