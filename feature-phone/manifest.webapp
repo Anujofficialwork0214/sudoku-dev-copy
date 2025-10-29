@@ -6,8 +6,8 @@
   "package_name": "com.kaifoundry.sudokujp",
   "launch_path": "/index.html",
   "icons": {
-    "56": "./assets/icons/logo.png",
-    "112": "./assets/icons/logo.png"
+    "56": "/assets/icons/logo.png",
+    "112": "/assets/icons/logo.png"
   },
   "developer": {
     "name": "Kaifoundry Game Studios",
