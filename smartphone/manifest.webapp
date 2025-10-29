@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "version_code": 1,
+  "name": "Sudoku",
+  "description": "Fill every row, column and 3×3 box with digits 1–9 — sharpen your logic and beat the puzzle.",
+  "package_name": "com.kaifoundry.sudokusp",
+  "launch_path": "/index.html",
+  "icons": {
+    "56": "/assets/icons/logo.png",
+    "112": "/assets/icons/logo.png"
+  },
+  "developer": {
+    "name": "Kaifoundry Game Studios",
+    "url": "https://kaifoundry.com/"
+  },
+  "default_locale": "en",
+  "fullscreen": true,
+  "orientation": "portrait",
+  "type": "web",
+  "permissions": {
+    "systemXHR": {
+      "description": "Required to make API calls."
+    },
+    "device-storage:sdcard": {
+      "access": "readwrite",
+      "description": "Allows saving and loading game data from SD card."
+    },
+    "browser": {
+      "description": "Needed to open external web pages inside the app."
+    },
+    "serviceworker": {
+      "description": "Enables background push and offline features."
+    },
+    "desktop-notification": {
+      "description": "Allows displaying in-game notifications."
+    },
+    "audio-capture": {
+      "description": "Allows capturing audio using getUserMedia()."
+    },
+    "push": {
+      "description": "Required for push notifications."
+    },
+    "datacall": {
+      "description": "Used to check internet connectivity."
+    },
+    "cross-domain-content": [
+      "https://kaifoundry.com/",
+      "https://api.kaifoundry.com/"
+    ]
+  },
+  "locales": {
+    "en": {
+      "name": "Sudoku",
+      "description": "Sharpen your logic and fill every 3×3 box — now optimized for JioPhone!"
+    }
+  }
+}
