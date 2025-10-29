@@ -11,8 +11,8 @@ Do not edit any other part.
 
 var adSpotInterstitial_key = "u4ck1t92"; //Ex. : zbjnq9gs
 var adSpotRewardedVideo_key = "729jl614"; //Ex. : 81xnt9bw
-var package = "com.kaifoundry.jumpnduck.jp"; //Ex. : com.vendor.gamename
-var gameName = "digitdestroyer"; //Ex. : testgame
+var package = "com.kaifoundry.sudoku.jp"; //Ex. : com.vendor.gamename
+var gameName = "sudoku"; //Ex. : testgame
 var gameVersion = "V1.0.6"; //Ex. : V1.0.1
 var isAdReady = false;
 var isRVReady = false;
