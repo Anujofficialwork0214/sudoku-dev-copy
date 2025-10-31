@@ -541,19 +541,34 @@ let currentDifficultyIndex =
     },
 
     solve: function () {
-      // showJioGameAd("showAdRewarded"); // Show rewarded ad before solving
-      this.game.isSolvedDirectly = true;
-      const rows = this.solvedMatrix;
+    // Disable the solve button to prevent multiple clicks
+    // const solveBtn = document.querySelector('button[data-action="solve"]');
+    // if (solveBtn) {
+    //     solveBtn.disabled = true;
+    // }
 
-      for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-          const input = this.game.cellMatrix[r][c];
-          input.value = rows[r][c];
-          input.classList.remove("invalid");
+    // Show rewarded ad first
+    showJioGameAd("showAdRewarded", () => {
+        // After ad completes, solve the Sudoku
+        this.game.isSolvedDirectly = true;
+        const rows = this.solvedMatrix;
+
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                const input = this.game.cellMatrix[r][c];
+                input.value = rows[r][c];
+                input.classList.remove("invalid");
+            }
         }
-      }
-      this.game.table.classList.add("valid-matrix");
-    },
+        this.game.table.classList.add("valid-matrix");
+
+        // Re-enable the solve button
+        // if (solveBtn) {
+        //     solveBtn.disabled = false;
+        // }
+    });
+}
+
   };
 
   global.Sudoku = Sudoku;
@@ -621,7 +636,6 @@ document.getElementById("controls").addEventListener("click", function (e) {
 
 function gameOver() {
   showJioGameAd("setTopBanner");
-  // ✅ use document.getElementById (not just getElementById)
   const gameOverPopup = document.getElementById("gameOverPopUp");
 
   if (gameOverPopup) {
@@ -671,17 +685,28 @@ function updateDifficultyDisplay( currentDifficulty ) {
   display.textContent = `${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}`;
 }
 
-function showJioGameAd(name) {
+function showJioGameAd(name, callback) {
     if (!name || typeof name !== "string") {
         console.warn("Invalid ad function name provided.");
         return;
     }
 
-    // Check if the function exists in the global scope
     if (typeof window[name] === "function") {
         try {
             window[name](); // call the SDK function dynamically
             console.log(`${name} called successfully.`);
+
+            // Hook callback to rewarded ad completion
+            if (callback) {
+                const originalOnEnd = window.onAdMediaEnd;
+                window.onAdMediaEnd = function(adSpot, completed, rewardAmount) {
+                    if (completed) {
+                        callback(); // run the solve after ad is completed
+                    }
+                    // Call original handler if needed
+                    if (originalOnEnd) originalOnEnd(adSpot, completed, rewardAmount);
+                };
+            }
         } catch (error) {
             console.error(`Error calling ${name}:`, error);
         }
@@ -689,3 +714,4 @@ function showJioGameAd(name) {
         console.warn(`Function ${name} does not exist in the SDK.`);
     }
 }
+
