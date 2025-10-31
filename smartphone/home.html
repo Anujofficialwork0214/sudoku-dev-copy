@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Sudoku</title>
+    <link rel="shortcut icon" href="./assets/icons/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/home.style.css" />
+</head>
+
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splash">
+        <div class="splash-logo"></div>
+        <div class="splash-text">Sudoku</div>
+    </div>
+
+    <!-- Home Screen -->
+    <div class="home-container">
+        <div class="home-box">
+            <h2 class="game-title">Sudoku</h2>
+            <p class="game-subtitle">Sharpen your mind. Solve the grid!</p>
+            <div class="home-buttons-group">
+                <button class="btn primary" id="startBtn">Start Game</button>
+                <button class="btn primary" id="rulesBtn">Rules</button>
+                <button class="btn primary" id="aboutBtn">About</button>
+                <button class="btn danger" id="exitBtn">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules Popup -->
+    <div class="overlay" id="rulesOverlay">
+        <div class="popup">
+            <h3>Game Rules</h3>
+            <p>Fill each 9×9 grid so that every row, column, and 3×3 box contains digits 1–9 without repetition.</p>
+            <p>Use logic and deduction — no guessing required!</p>
+            <button class="close-btn" data-close="rulesOverlay">Close</button>
+        </div>
+    </div>
+
+    <!-- About Popup -->
+    <div class="overlay" id="aboutOverlay">
+        <div class="popup">
+            <h3>About Sudoku</h3>
+            <p>Sudoku is a logic-based puzzle game that enhances focus and reasoning.</p>
+            <p>Developed by <b>Vicky</b> with ❤️ — crafted for fun and challenge.</p>
+            <button class="close-btn" data-close="aboutOverlay">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const splash = document.getElementById("splash");
+            const rulesBtn = document.getElementById("rulesBtn");
+            const aboutBtn = document.getElementById("aboutBtn");
+            const exitBtn = document.getElementById("exitBtn");
+            const startBtn = document.getElementById("startBtn");
+
+            // ✅ Show splash only once per session
+            const showSplash = !sessionStorage.getItem("splashShown");
+
+            if (showSplash) {
+                sessionStorage.setItem("splashShown", "true");
+                setTimeout(() => splash.classList.add("hide"), 2000);
+            } else {
+                splash.style.display = "none";
+            }
+
+            // ✅ Popup open/close
+            const openOverlay = id => document.getElementById(id).classList.add("active");
+            const closeOverlay = id => document.getElementById(id).classList.remove("active");
+
+            rulesBtn.addEventListener("click", () => openOverlay("rulesOverlay"));
+            aboutBtn.addEventListener("click", () => openOverlay("aboutOverlay"));
+
+            document.querySelectorAll(".close-btn").forEach(btn => {
+                btn.addEventListener("click", e => closeOverlay(e.target.dataset.close));
+            });
+
+            // ✅ Exit button
+            exitBtn.addEventListener("click", () => {
+                // if (confirm("Are you sure you want to exit Sudoku?")) {
+                window.close();
+                // }
+            });
+
+
+            // ✅ Start game → show splash on game.html
+            startBtn.addEventListener("click", () => {
+                sessionStorage.setItem("showSplashNext", "true");
+                window.location.href = "index.html";
+            });
+        });
+    </script>
+</body>
+
+</html>
