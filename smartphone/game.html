@@ -52,7 +52,7 @@
 
 
   <div id="controls">
-    <button type="button" class="btn primary" data-action="solve">Solve</button>
+    <button type="button" class="btn primary" data-action="solve" >Solve</button>
     <button type="button" class="btn primary" data-action="newGame">New Game</button>
     <button type="button" class="btn primary" onclick="gotoHome()">Home</button>
   </div>
@@ -90,10 +90,23 @@
   <script>
 
     window.addEventListener('load', function () {
+      const solveBtn = document.querySelector('button[data-action="solve"]');
+    if (solveBtn) {
+        solveBtn.disabled = true;
+    }
+      cacheAdRewarded();
       cacheAd();
+      setTimeout(() => {
+        // Re-enable the solve button
+        if (solveBtn) {
+            solveBtn.disabled = false;
+        }
+      }, 2000);
+
       setTimeout(() => {
         loadBanner();
       }, 5000);
+      
       setTimeout(() => {
         showAd();
       }, 120000);
