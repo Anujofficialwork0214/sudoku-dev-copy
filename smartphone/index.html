@@ -2,89 +2,98 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Sudoku</title>
-  <link rel="stylesheet" href="./assets/css/style.css" />
-  <link rel="shortcut icon" href="./assets/icons/logo.png" type="image/x-icon">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Sudoku | Home</title>
+    <link rel="shortcut icon" href="./assets/icons/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/home.style.css" />
 </head>
 
 <body>
-  <!-- NOTE: class name changed to match CSS -->
-  <div class="container">
-    <div id="mistakes-counter" class="topbar">
-      <p>Mistakes: <span id="mistakeCount">0</span>/5</p>
-      <p>Level: <span id="difficultyDisplay">Easy</span></p>
-    </div>
-    <!-- Your app.js will render the <table> inside here -->
-    <!-- Example structure (if you render server-side):
-      <table class="sudoku-grid">
-        <tbody>
-          ... 9 <tr> rows with 9 <td><input/></td> each ...
-        </tbody>
-      </table>
-      -->
-  </div>
-
-  <div id="sudoku-keypad">
-    <!-- Row 1: 1–5 -->
-    <div class="keypad-row">
-      <button class="keypad-btn" data-num="1">1</button>
-      <button class="keypad-btn" data-num="2">2</button>
-      <button class="keypad-btn" data-num="3">3</button>
-      <button class="keypad-btn" data-num="4">4</button>
-      <button class="keypad-btn" data-num="5">5</button>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splash">
+        <div class="splash-logo"></div>
+        <div class="splash-text">Sudoku</div>
     </div>
 
-    <!-- Row 2: 6–9 + Clear -->
-    <div class="keypad-row">
-      <button class="keypad-btn" data-num="6">6</button>
-      <button class="keypad-btn" data-num="7">7</button>
-      <button class="keypad-btn" data-num="8">8</button>
-      <button class="keypad-btn" data-num="9">9</button>
-      <button class="keypad-btn" id="clear-btn">Clear</button>
+    <!-- Home Screen -->
+    <div class="home-container">
+        <div class="home-box">
+            <h2 class="game-title">Sudoku</h2>
+            <p class="game-subtitle">Sharpen your mind. Solve the grid!</p>
+            <div class="home-buttons-group">
+                <button class="btn primary" id="startBtn">Start Game</button>
+                <button class="btn primary" id="rulesBtn">Rules</button>
+                <button class="btn primary" id="aboutBtn">About</button>
+                <button class="btn danger" id="exitBtn">Exit</button>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Rules Popup -->
+    <div class="overlay" id="rulesOverlay">
+        <div class="popup">
+            <h3>Game Rules</h3>
+            <p>Fill each 9×9 grid so that every row, column, and 3×3 box contains digits 1–9 without repetition.</p>
+            <p>Use logic and deduction — no guessing required!</p>
+            <button class="close-btn" data-close="rulesOverlay">Close</button>
+        </div>
+    </div>
+
+    <!-- About Popup -->
+    <div class="overlay" id="aboutOverlay">
+        <div class="popup">
+            <h3>About Sudoku</h3>
+            <p>Sudoku is a logic-based puzzle game that enhances focus and reasoning.</p>
+            <p>Developed by <b>Vicky</b> with ❤️ — crafted for fun and challenge.</p>
+            <button class="close-btn" data-close="aboutOverlay">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const splash = document.getElementById("splash");
+            const rulesBtn = document.getElementById("rulesBtn");
+            const aboutBtn = document.getElementById("aboutBtn");
+            const exitBtn = document.getElementById("exitBtn");
+            const startBtn = document.getElementById("startBtn");
+
+            // ✅ Show splash only once per session
+            const showSplash = !sessionStorage.getItem("splashShown");
+
+            if (showSplash) {
+                sessionStorage.setItem("splashShown", "true");
+                setTimeout(() => splash.classList.add("hide"), 2000);
+            } else {
+                splash.style.display = "none";
+            }
+
+            // ✅ Popup open/close
+            const openOverlay = id => document.getElementById(id).classList.add("active");
+            const closeOverlay = id => document.getElementById(id).classList.remove("active");
+
+            rulesBtn.addEventListener("click", () => openOverlay("rulesOverlay"));
+            aboutBtn.addEventListener("click", () => openOverlay("aboutOverlay"));
+
+            document.querySelectorAll(".close-btn").forEach(btn => {
+                btn.addEventListener("click", e => closeOverlay(e.target.dataset.close));
+            });
+
+            // ✅ Exit button
+            exitBtn.addEventListener("click", () => {
+                // if (confirm("Are you sure you want to exit Sudoku?")) {
+                window.close();
+                // }
+            });
 
 
-  <div id="controls">
-    <button type="button" class="btn primary" data-action="solve">Solve</button>
-    <button type="button" class="btn primary" data-action="newGame">New Game</button>
-  </div>
-  <p id="popup-message"></p>
-  <div id="solvePopup" class="popup-overlay">
-    <div class="popup-box">
-      <h3>Are you sure?</h3>
-      <p>This will automatically solve the Sudoku puzzle.</p>
-      <div class="popup-buttons">
-        <button id="confirmSolve" class="btn primary">Yes, Solve</button>
-        <button id="cancelSolve" class="btn">Cancel</button>
-      </div>
-    </div>
-  </div>
-  <div id="gameOverPopUp" class="popup-overlay">
-    <div class="popup-box">
-      <h3>Game Over!</h3>
-      <p>You have made more than 5 mistakes.</p>
-      <div class="popup-buttons">
-        <button type="button" class="btn primary" id="restartGame" data-action="restartGame">Restart Game</button>
-      </div>
-    </div>
-  </div>
-  <div id="gameWon" class="popup-overlay">
-    <div class="popup-box">
-      <h3>🎉 Great You Won!</h3>
-      <p id="gameWonSubmessage">Congratulations! Keep up the great work and aim even higher!</p>
-      <div class="popup-buttons">
-        <button type="button" class="btn primary" id="restartGameWon" data-action="restartGame">Start Next
-          Level</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="./assets/js/app.js" type="text/javascript"></script>
-  <script src="./assets/js/jiogames_sp_wrapper.js"></script>
-  <script src="./assets/js/controls.js"></script>
+            // ✅ Start game → show splash on game.html
+            startBtn.addEventListener("click", () => {
+                sessionStorage.setItem("showSplashNext", "true");
+                window.location.href = "game.html";
+            });
+        });
+    </script>
 </body>
 
 </html>

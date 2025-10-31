@@ -1,12 +1,12 @@
 //#region "Variable"
 var adSpotInterstitial = "zbjnq9gs";
 var adSpotRewardedVideo = "81xnt9bw";
-var packageName = "com.kaifoundry.sudoku.sp";
+var packageName = "com.kaifoundry.sudokuSP";
 var isAdReady = false;
 var isRVReady = false;
 
 var banner_ZoneKey = "l9mp2wfq";
-var bannerPackageName = "com.kaifoundry.sudoku.sp";
+var bannerPackageName = "com.kaifoundry.sudokuSP";
 
 //#endregion
 
