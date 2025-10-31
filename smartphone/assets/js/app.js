@@ -541,6 +541,7 @@ let currentDifficultyIndex =
     },
 
     solve: function () {
+      // showJioGameAd("showAdRewarded"); // Show rewarded ad before solving
       this.game.isSolvedDirectly = true;
       const rows = this.solvedMatrix;
 
@@ -619,8 +620,7 @@ document.getElementById("controls").addEventListener("click", function (e) {
 });
 
 function gameOver() {
-  // alert("Game Over! You have made more than 10 mistakes.");
-
+  showJioGameAd("setTopBanner");
   // ✅ use document.getElementById (not just getElementById)
   const gameOverPopup = document.getElementById("gameOverPopUp");
 
@@ -669,4 +669,23 @@ function updateMistakeCounter(count) {
 function updateDifficultyDisplay( currentDifficulty ) {
   const display = document.getElementById('difficultyDisplay');
   display.textContent = `${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}`;
+}
+
+function showJioGameAd(name) {
+    if (!name || typeof name !== "string") {
+        console.warn("Invalid ad function name provided.");
+        return;
+    }
+
+    // Check if the function exists in the global scope
+    if (typeof window[name] === "function") {
+        try {
+            window[name](); // call the SDK function dynamically
+            console.log(`${name} called successfully.`);
+        } catch (error) {
+            console.error(`Error calling ${name}:`, error);
+        }
+    } else {
+        console.warn(`Function ${name} does not exist in the SDK.`);
+    }
 }
