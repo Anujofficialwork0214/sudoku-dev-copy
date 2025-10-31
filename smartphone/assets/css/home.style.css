@@ -15,14 +15,13 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-html,
 body {
   height: 100%;
   margin: 0;
   font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto,
     "Helvetica Neue", Arial, "Noto Sans";
-  background-color: var(--bg-main);
   background: url("../images/background.png") center/cover no-repeat fixed;
+  background-size: cover;
   color: var(--text-color);
   overflow: hidden;
 }
