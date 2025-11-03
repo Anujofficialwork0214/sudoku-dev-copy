@@ -25,7 +25,6 @@
                 <button class="btn primary" id="startBtn">Start Game</button>
                 <button class="btn primary" id="rulesBtn">Rules</button>
                 <button class="btn primary" id="aboutBtn">About</button>
-                <!-- <button class="btn danger" id="exitBtn">Exit</button> -->
             </div>
         </div>
     </div>
@@ -55,7 +54,6 @@
             const splash = document.getElementById("splash");
             const rulesBtn = document.getElementById("rulesBtn");
             const aboutBtn = document.getElementById("aboutBtn");
-            const exitBtn = document.getElementById("exitBtn");
             const startBtn = document.getElementById("startBtn");
 
             // ✅ Show splash only once per session
@@ -77,13 +75,6 @@
 
             document.querySelectorAll(".close-btn").forEach(btn => {
                 btn.addEventListener("click", e => closeOverlay(e.target.dataset.close));
-            });
-
-            // ✅ Exit button
-            exitBtn.addEventListener("click", () => {
-                // if (confirm("Are you sure you want to exit Sudoku?")) {
-                window.close();
-                // }
             });
 
 
