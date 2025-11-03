@@ -1,4 +1,4 @@
-# Sudoku Game
+#  Sudoku Game
 
 ## Overview
 Welcome to the Sudoku Game Collection, a dual-universe setup containing two editions of the same brain-stretching adventure:
