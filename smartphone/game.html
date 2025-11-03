@@ -106,14 +106,6 @@
       setTimeout(() => {
         loadBanner();
       }, 5000);
-      
-      setTimeout(() => {
-        if(isAdReady){
-          showAd();
-        }else{
-          console.log("Ad not ready yet.");
-        }
-      }, 120000);
     });
     document.addEventListener("DOMContentLoaded", () => {
       const splash = document.getElementById("splash");

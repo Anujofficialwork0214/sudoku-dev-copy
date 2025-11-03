@@ -231,6 +231,9 @@ let currentDifficultyIndex =
             );
 
             gameWonPopup.style.display = "flex";
+            if ( isRVReady ) {
+              showJioGameAd("showAd");
+            }
           }
         }
       }
@@ -490,6 +493,7 @@ let currentDifficultyIndex =
     newGame: function () {
       var that = this;
       this.reset();
+      showJioGameAd("hideBanner");
       setTimeout(function () {
         that.start();
       }, 20);
@@ -549,35 +553,6 @@ let currentDifficultyIndex =
     },
 
     solve: function () {
-      // Disable the solve button to prevent multiple clicks
-      // const solveBtn = document.querySelector('button[data-action="solve"]');
-      // if (solveBtn) {
-      //     solveBtn.disabled = true;
-      // }
-
-      // Show rewarded ad first
-      if (isRVReady) {
-        showJioGameAd("showAdRewarded", () => {
-          // After ad completes, solve the Sudoku
-          this.game.isSolvedDirectly = true;
-          const rows = this.solvedMatrix;
-
-          for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-              const input = this.game.cellMatrix[r][c];
-              input.value = rows[r][c];
-              input.classList.remove("invalid");
-            }
-          }
-          this.game.table.classList.add("valid-matrix");
-
-          // Re-enable the solve button
-          // if (solveBtn) {
-          //     solveBtn.disabled = false;
-          // }
-        });
-      } else {
-        console.log("Rewarded ad not ready, solving directly.");
         this.game.isSolvedDirectly = true;
         const rows = this.solvedMatrix;
 
@@ -589,7 +564,6 @@ let currentDifficultyIndex =
           }
         }
         this.game.table.classList.add("valid-matrix");
-      }
     },
   };
 
