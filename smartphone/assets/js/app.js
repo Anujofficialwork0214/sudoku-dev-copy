@@ -176,7 +176,7 @@ let currentDifficultyIndex =
       this.matrix.col[col][row] = val;
       this.matrix.sect[sectRow][sectCol][secIndex] = val;
 
-      if (this.config.validate_on_insert ) {
+      if (this.config.validate_on_insert) {
         var ok = this.validateNumber(val, row, col, oldVal);
         input.classList.toggle("invalid", !ok);
         if (!ok && !this.isSolvedDirectly) {
@@ -188,7 +188,9 @@ let currentDifficultyIndex =
         }
       }
       if (this.isSolvedDirectly) {
-        showPopupMessage("You are editing already solved sudoku. Click on New Game to start new game");
+        showPopupMessage(
+          "You are editing already solved sudoku. Click on New Game to start new game"
+        );
         return;
       }
 
@@ -209,18 +211,24 @@ let currentDifficultyIndex =
         if (allFilled) {
           const gameWonPopup = document.getElementById("gameWon");
           const restartGameWon = document.getElementById("restartGameWon");
-          const gameWonSubmessage = document.getElementById("gameWonSubmessage");
+          const gameWonSubmessage =
+            document.getElementById("gameWonSubmessage");
           if (gameWonPopup) {
             // Move to next difficulty for next round
-            if(currentDifficultyIndex == difficultyOrder.length - 1){
-              gameWonSubmessage.innerText = "Amazing! You are on the highest difficulty level!";
+            if (currentDifficultyIndex == difficultyOrder.length - 1) {
+              gameWonSubmessage.innerText =
+                "Amazing! You are on the highest difficulty level!";
               restartGameWon.innerText = "Restart Expert Game";
             }
             if (currentDifficultyIndex < difficultyOrder.length - 1) {
               currentDifficultyIndex++;
             }
-            game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
-            localStorage.setItem('currentDifficultyIndex', currentDifficultyIndex);
+            game.game.config.difficulty =
+              difficultyOrder[currentDifficultyIndex];
+            localStorage.setItem(
+              "currentDifficultyIndex",
+              currentDifficultyIndex
+            );
 
             gameWonPopup.style.display = "flex";
           }
@@ -541,34 +549,48 @@ let currentDifficultyIndex =
     },
 
     solve: function () {
-    // Disable the solve button to prevent multiple clicks
-    // const solveBtn = document.querySelector('button[data-action="solve"]');
-    // if (solveBtn) {
-    //     solveBtn.disabled = true;
-    // }
+      // Disable the solve button to prevent multiple clicks
+      // const solveBtn = document.querySelector('button[data-action="solve"]');
+      // if (solveBtn) {
+      //     solveBtn.disabled = true;
+      // }
 
-    // Show rewarded ad first
-    showJioGameAd("showAdRewarded", () => {
-        // After ad completes, solve the Sudoku
+      // Show rewarded ad first
+      if (isRVReady) {
+        showJioGameAd("showAdRewarded", () => {
+          // After ad completes, solve the Sudoku
+          this.game.isSolvedDirectly = true;
+          const rows = this.solvedMatrix;
+
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              const input = this.game.cellMatrix[r][c];
+              input.value = rows[r][c];
+              input.classList.remove("invalid");
+            }
+          }
+          this.game.table.classList.add("valid-matrix");
+
+          // Re-enable the solve button
+          // if (solveBtn) {
+          //     solveBtn.disabled = false;
+          // }
+        });
+      } else {
+        console.log("Rewarded ad not ready, solving directly.");
         this.game.isSolvedDirectly = true;
         const rows = this.solvedMatrix;
 
         for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-                const input = this.game.cellMatrix[r][c];
-                input.value = rows[r][c];
-                input.classList.remove("invalid");
-            }
+          for (let c = 0; c < 9; c++) {
+            const input = this.game.cellMatrix[r][c];
+            input.value = rows[r][c];
+            input.classList.remove("invalid");
+          }
         }
         this.game.table.classList.add("valid-matrix");
-
-        // Re-enable the solve button
-        // if (solveBtn) {
-        //     solveBtn.disabled = false;
-        // }
-    });
-}
-
+      }
+    },
   };
 
   global.Sudoku = Sudoku;
@@ -680,38 +702,39 @@ function updateMistakeCounter(count) {
   }
 }
 
-function updateDifficultyDisplay( currentDifficulty ) {
-  const display = document.getElementById('difficultyDisplay');
-  display.textContent = `${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}`;
+function updateDifficultyDisplay(currentDifficulty) {
+  const display = document.getElementById("difficultyDisplay");
+  display.textContent = `${
+    currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)
+  }`;
 }
 
 function showJioGameAd(name, callback) {
-    if (!name || typeof name !== "string") {
-        console.warn("Invalid ad function name provided.");
-        return;
-    }
+  if (!name || typeof name !== "string") {
+    console.warn("Invalid ad function name provided.");
+    return;
+  }
 
-    if (typeof window[name] === "function") {
-        try {
-            window[name](); // call the SDK function dynamically
-            console.log(`${name} called successfully.`);
+  if (typeof window[name] === "function") {
+    try {
+      window[name](); // call the SDK function dynamically
+      console.log(`${name} called successfully.`);
 
-            // Hook callback to rewarded ad completion
-            if (callback) {
-                const originalOnEnd = window.onAdMediaEnd;
-                window.onAdMediaEnd = function(adSpot, completed, rewardAmount) {
-                    if (completed) {
-                        callback(); // run the solve after ad is completed
-                    }
-                    // Call original handler if needed
-                    if (originalOnEnd) originalOnEnd(adSpot, completed, rewardAmount);
-                };
-            }
-        } catch (error) {
-            console.error(`Error calling ${name}:`, error);
-        }
-    } else {
-        console.warn(`Function ${name} does not exist in the SDK.`);
+      // Hook callback to rewarded ad completion
+      if (callback) {
+        const originalOnEnd = window.onAdMediaEnd;
+        window.onAdMediaEnd = function (adSpot, completed, rewardAmount) {
+          if (completed) {
+            callback(); // run the solve after ad is completed
+          }
+          // Call original handler if needed
+          if (originalOnEnd) originalOnEnd(adSpot, completed, rewardAmount);
+        };
+      }
+    } catch (error) {
+      console.error(`Error calling ${name}:`, error);
     }
+  } else {
+    console.warn(`Function ${name} does not exist in the SDK.`);
+  }
 }
-
