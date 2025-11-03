@@ -24,7 +24,7 @@ Whether you tap or press, logic remains your greatest ally.
 | Responsive design | ✅ | ✅ |
 | Multiple difficulties | ✅ | ✅ |
 
-##  Requirements
+## Requirements
 Choose your fighter:
 
 - **Smartphone edition**: Modern browser + HTML5 + Touch support
