@@ -183,6 +183,10 @@ let currentDifficultyIndex =
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
           if (this.mistakeCount >= 5) {
+          postScore(0);
+            if ( isAdReady ) {
+              showJioGameAd("showAd");
+            }
             gameOver();
           }
         }
