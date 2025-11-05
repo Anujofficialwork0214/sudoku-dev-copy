@@ -161,6 +161,26 @@ tr:nth-child(6) input {
   box-shadow: inset 0 -3px rgb(41.6991150442, 82.3008849558, 75.1681415929);
 }
 
+.solve-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* space between text and icon */
+  padding: 10px 14px;
+}
+
+.solve-btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  transition: transform 0.15s ease;
+}
+
+.solve-btn:hover svg {
+  transform: scale(1.1);
+}
+
 /* ---------- Small screens ---------- */
 @media (max-width: 480px) {
   :root {

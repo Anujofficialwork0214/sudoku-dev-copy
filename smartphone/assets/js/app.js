@@ -1,6 +1,6 @@
 const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
 let currentDifficultyIndex =
-  Number(localStorage.getItem("currentDifficultyIndex")) || 0;
+  Number(sessionStorage.getItem("currentDifficultyIndex")) || 0;
 // console.log("Loaded difficulty index from storage:", currentDifficultyIndex);
 (function (global) {
   "use strict";
@@ -225,13 +225,14 @@ let currentDifficultyIndex =
             }
             game.game.config.difficulty =
               difficultyOrder[currentDifficultyIndex];
-            localStorage.setItem(
+            sessionStorage.setItem(
               "currentDifficultyIndex",
               currentDifficultyIndex
             );
 
             gameWonPopup.style.display = "flex";
-            if ( isRVReady ) {
+            postScore(0);
+            if ( isAdReady ) {
               showJioGameAd("showAd");
             }
           }
@@ -493,7 +494,6 @@ let currentDifficultyIndex =
     newGame: function () {
       var that = this;
       this.reset();
-      showJioGameAd("hideBanner");
       setTimeout(function () {
         that.start();
       }, 20);
@@ -553,17 +553,36 @@ let currentDifficultyIndex =
     },
 
     solve: function () {
-        this.game.isSolvedDirectly = true;
-        const rows = this.solvedMatrix;
+      if (isRVReady) {
+        showJioGameAd("showAdRewarded", () => {
+          // After ad completes, solve the Sudoku
+          this.game.isSolvedDirectly = true;
+          const rows = this.solvedMatrix;
 
-        for (let r = 0; r < 9; r++) {
-          for (let c = 0; c < 9; c++) {
-            const input = this.game.cellMatrix[r][c];
-            input.value = rows[r][c];
-            input.classList.remove("invalid");
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              const input = this.game.cellMatrix[r][c];
+              input.value = rows[r][c];
+              input.classList.remove("invalid");
+            }
           }
-        }
-        this.game.table.classList.add("valid-matrix");
+          this.game.table.classList.add("valid-matrix");
+        });
+      } else {
+        console.log("Ad SDK not ready, solving directly");
+        // If ad SDK not ready, solve directly
+        this.game.isSolvedDirectly = true;
+          const rows = this.solvedMatrix;
+
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              const input = this.game.cellMatrix[r][c];
+              input.value = rows[r][c];
+              input.classList.remove("invalid");
+            }
+          }
+          this.game.table.classList.add("valid-matrix");
+      }
     },
   };
 
@@ -607,31 +626,44 @@ document.querySelectorAll(".keypad-btn").forEach((btn) => {
   });
 });
 
-document.getElementById("controls").addEventListener("click", function (e) {
-  var t = e.target.closest("button");
-  if (!t) return;
-  var action = t.dataset.action;
+document.getElementById("controls")?.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
 
-  // Intercept only the "solve" action
-  if (action === "solve") {
-    t.disabled = true;
-    showSolvePopup();
-    return; // stop normal call to game.solve()
-  }
+  const { action } = button.dataset;
+  if (!action) return;
 
-  // For all other actions (newGame, validate, etc.)
-  if (action && typeof game[action] === "function") {
-    game[action]();
-    if (action === "newGame") {
-      var solveBtn = document.querySelector('button[data-action="solve"]');
-      solveBtn.disabled = false;
-      solveBtn.classList.remove("disabled");
+  try {
+    switch (action) {
+      case "solve":
+        if (!game?.game?.isSolvedDirectly) {
+          showSolvePopup();
+        } else {
+          showPopupMessage("Already solved! Click 'New Game' to start again.");
+        }
+        break;
+
+      case "newGame":
+        if (typeof game.newGame === "function") {
+          game.newGame();
+          gameCacheAd();
+        }
+        break;
+
+      default:
+        if (typeof game[action] === "function") {
+          game[action]();
+        }
+        break;
     }
+  } catch (error) {
+    console.error(`Error executing action "${action}":`, error);
+    showPopupMessage("An unexpected error occurred. Please try again.");
   }
 });
 
+
 function gameOver() {
-  showJioGameAd("setTopBanner");
   const gameOverPopup = document.getElementById("gameOverPopUp");
 
   if (gameOverPopup) {
@@ -647,24 +679,19 @@ document.getElementById("restartGame").addEventListener("click", function () {
   const gameWonPopup = document.getElementById("gameWon");
   if (gameWonPopup) gameWonPopup.style.display = "none";
 
-  var solveBtn = document.querySelector('button[data-action="solve"]');
-  solveBtn.disabled = false;
-  solveBtn.classList.remove("disabled");
   // Reset and start a new game
+  gameCacheAd();
   game.reset();
   game.start();
 });
 
 document
-  .getElementById("restartGameWon")
-  .addEventListener("click", function () {
+  .getElementById("restartGameWon").addEventListener("click", function () {
     const gameWonPopup = document.getElementById("gameWon");
     if (gameWonPopup) gameWonPopup.style.display = "none";
 
-    var solveBtn = document.querySelector('button[data-action="solve"]');
-    solveBtn.disabled = false;
-    solveBtn.classList.remove("disabled");
     // Reset and start a new game
+    gameCacheAd();
     game.reset();
     game.start();
   });

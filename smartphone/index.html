@@ -44,12 +44,12 @@
         <div class="popup">
             <h3>About Sudoku</h3>
             <p>Sudoku is a logic-based puzzle game that enhances focus and reasoning.</p>
-            <p>Developed by <b>Kaifoundry</b> with ❤️ — crafted for fun and challenge.</p>
             <button class="close-btn" data-close="aboutOverlay">Close</button>
         </div>
     </div>
 
     <script>
+
         document.addEventListener("DOMContentLoaded", () => {
             const splash = document.getElementById("splash");
             const rulesBtn = document.getElementById("rulesBtn");
@@ -77,10 +77,8 @@
                 btn.addEventListener("click", e => closeOverlay(e.target.dataset.close));
             });
 
-
             // ✅ Start game → show splash on game.html
             startBtn.addEventListener("click", () => {
-                sessionStorage.setItem("showSplashNext", "true");
                 window.location.href = "game.html";
             });
         });
