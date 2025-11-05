@@ -15,7 +15,7 @@ Whether you tap or press, logic remains your greatest ally.
 - `feature-phone/` -  KaiOS Jiophone version
 - `smartphone/` - Modern smartphone browser version
 
-##  Features at a Glance
+## Features at a Glance
 
 | Feature | Smartphone | Feature Phone |
 |---------|------------|---------------|
