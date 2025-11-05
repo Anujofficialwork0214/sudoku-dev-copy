@@ -187,6 +187,9 @@ let currentDifficultyIndex =
             if ( isAdReady ) {
               showJioGameAd("showAd");
             }
+            else{
+              console.log("mid roll Ad not ready");
+            }
             gameOver();
           }
         }
@@ -238,6 +241,8 @@ let currentDifficultyIndex =
             postScore(0);
             if ( isAdReady ) {
               showJioGameAd("showAd");
+            }else{
+              console.log("mid roll Ad not ready");
             }
           }
         }
@@ -573,7 +578,7 @@ let currentDifficultyIndex =
           this.game.table.classList.add("valid-matrix");
         });
       } else {
-        console.log("Ad SDK not ready, solving directly");
+        console.log("Rewarded video ad not ready, solving directly");
         // If ad SDK not ready, solve directly
         this.game.isSolvedDirectly = true;
           const rows = this.solvedMatrix;

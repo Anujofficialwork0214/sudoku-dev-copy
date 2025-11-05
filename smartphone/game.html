@@ -98,8 +98,13 @@
     });
 
     function gotoHome() {
-      showAd();
-      window.location.href = "index.html";
+      if ( isAdReady ) {
+        showJioGameAd("showAd", ()=>{
+          window.location.href = "index.html";
+        });
+      }else{
+        console.log("mid roll Ad not ready");
+      }
     }
   </script>
   <script src="./assets/js/app.js" type="text/javascript"></script>
