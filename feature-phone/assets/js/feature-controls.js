@@ -61,7 +61,7 @@
           showAdRewarded();
         } else {
           game.solve();
-          console.log("Mid roll ad not ready");
+          console.log("Rewarded video ad not ready");
         }
         break;
 
@@ -87,7 +87,11 @@
           e.preventDefault();
           if (active && !active.classList.contains("disabled")) {
             active.value = "";
-            active.dispatchEvent(new Event("input"));
+            
+            // KaiOS-compatible event creation
+            var inputEvent = document.createEvent('HTMLEvents');
+            inputEvent.initEvent('input', true, false);
+            active.dispatchEvent(inputEvent);
           }
           lastBackspaceTime = now;
           const msg = document.getElementById("exit-msg");
@@ -102,7 +106,12 @@
       default:
         if (/^[1-9]$/.test(key) && active && !active.classList.contains("disabled")) {
           active.value = key;
-          active.dispatchEvent(new Event("input"));
+          
+          // KaiOS-compatible event creation
+          var inputEvent = document.createEvent('HTMLEvents');
+          inputEvent.initEvent('input', true, false);
+          active.dispatchEvent(inputEvent);
+          
           moveFocus(1, 0);
         }
         break;

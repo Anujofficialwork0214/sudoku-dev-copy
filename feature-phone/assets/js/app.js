@@ -197,7 +197,7 @@ let currentDifficultyIndex =
       if (this.isSolvedDirectly) {
         const msg = document.getElementById("exit-msg");
         msg.style.display = "block";
-        msg.innerText = "Editing Already Solved! please start New Game";
+        msg.innerText = "Editing Already Solved! goto home";
         setTimeout(() => {
           msg.style.display = "none";
         }, 1000);
