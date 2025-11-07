@@ -1,6 +1,6 @@
 const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
 let currentDifficultyIndex =
-  Number(localStorage.getItem("currentDifficultyIndex")) || 0;
+  Number(sessionStorage.getItem("currentDifficultyIndex")) || 0;
 
 (function (global) {
   "use strict";
@@ -208,7 +208,7 @@ let currentDifficultyIndex =
             currentDifficultyIndex++;
           }
           game.game.config.difficulty = difficultyOrder[currentDifficultyIndex];
-          localStorage.setItem(
+          sessionStorage.setItem(
             "currentDifficultyIndex",
             currentDifficultyIndex
           );
@@ -503,6 +503,16 @@ let currentDifficultyIndex =
 
       // Choose givens based on difficulty
       values = getUnique(arr, difficulties[this.game.config.difficulty]);
+
+      //prefiling is digit is 1 or 3 because these assigned for sound control by jio-phone
+      arr.forEach((cell) => {
+        if (cell.value === "1" || cell.value === "3") {
+          // add if not already in values
+          if (!values.some((v) => v.index === cell.index)) {
+            values.push(cell);
+          }
+        }
+      });
 
       // Reset, then fill givens
       this.reset();
