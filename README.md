@@ -30,7 +30,7 @@ Choose your fighter:
 - **Smartphone edition**: Modern browser + HTML5 + Touch support
 - **Feature phone edition**: KaiOS 2.5+ with soft keys and D-Pad navigation
 
-##  Getting Started
+## Getting Started
 1. Pick a version
 2. Open `index.html`
 3. Sudoku doesn't need downloads, just determination
