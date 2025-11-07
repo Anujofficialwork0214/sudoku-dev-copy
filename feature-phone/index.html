@@ -10,44 +10,96 @@
 </head>
 
 <body>
-  <div id="splash">
-    <h2>🎮 Sudoku</h2>
-    <p>Powered by JioGames</p>
+  <div class="splash-screen" id="splash">
+    <div class="splash-logo"></div>
+    <div class="splash-text">Sudoku</div>
   </div>
-  <!-- <div id="mistakes-counter">
-     Mistakes: <span id="mistakeCount">0</span>/5 
-   </div> -->
-  <!-- NOTE: class name changed to match CSS -->
-  <div class="topbar">
-    <span>Mistakes: <span id="mistakeCount">0</span>/5 </span>
-    <span>Level: <span id="difficultyDisplay">Medium</span> </span>
-  </div>
-  <div class="container">
-  </div>
-  <div class="double-exit-msg" id="exit-msg">Click twice to exit game</div>
-  <div id="toast"></div>
 
-  <div id="controls">
-    <button type="button" class="btn primary soft-left" data-action="solve">Solve</button>
-    <!-- <button type="button" class="btn primary soft-center" data-action="validate">Validate</button> -->
-    <button type="button" class="btn primary soft-right" data-action="newGame">New Game</button>
+  <div class="home-container" id="homeScreen">
+    <h1 class="home-title">SUDOKU</h1>
+    <div class="menu-container">
+      <button class="home-btn" id="startBtn" tabindex="0">Start</button>
+      <button class="home-btn" id="howBtn" tabindex="0">How to Play</button>
+      <button class="home-btn" id="aboutBtn" tabindex="0">About</button>
+    </div>
+  </div>
+
+  <!-- How to Play Popup -->
+  <div class="popup-container" id="howPopup">
+    <div class="popup-content">
+      <h3>Game Rules</h3>
+      <p>Fill each 9×9 grid so that every row, column, and 3×3 box contains digits 1–9 without repetition.</p>
+      <p>Use logic and deduction — no guessing required!</p>
+      <button class="btn ok-btn">OK</button>
+    </div>
+  </div>
+
+  <!-- About Popup -->
+  <div class="popup-container" id="aboutPopup">
+    <div class="popup-content">
+      <h3>About Sudoku</h3>
+      <p>Sudoku is a logic-based puzzle game that enhances focus and reasoning.</p>
+      <button class="btn ok-btn">OK</button>
+    </div>
   </div>
 
   <script>
-    const splash = document.getElementById("splash");
-    const controls = document.getElementById("controls");
+    document.addEventListener("DOMContentLoaded", () => {
+      const splash = document.getElementById("splash");
+      const buttons = Array.from(document.querySelectorAll(".menu-container .home-btn"));
+      let index = 0;
+      let isPopUpOpen = false;
+      let currentPopup = null;
 
-    // Hide controls while splash
-    controls.style.display = "none";
+      // Hide splash after 2s, then focus first button
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          splash.classList.add("hide");
+          setTimeout(() => { buttons[index].focus(); splash.style.display = "none" }, 100);
+        }, 2000);
+      });
 
-    setTimeout(() => {
-      splash.style.display = "none";
-      controls.style.display = "flex"; // show controls
-    }, 3000);
+      // Key navigation
+      document.addEventListener("keydown", (e) => {
+        const key = e.key;
+
+        if (isPopUpOpen) {
+          if (key === "Enter" || key === "OK") {
+            // Close popup
+            currentPopup.classList.remove("active");
+            isPopUpOpen = false;
+            currentPopup = null;
+            buttons[index].focus();
+          }
+          return;
+        }
+
+        if (key === "ArrowUp") {
+          index = (index - 1 + buttons.length) % buttons.length;
+          buttons[index].focus();
+        } else if (key === "ArrowDown") {
+          index = (index + 1) % buttons.length;
+          buttons[index].focus();
+        } else if (key === "Enter" || key === "OK") {
+          const id = buttons[index].id;
+          if (id === "startBtn") {
+            window.location.href = "game.html";
+          } else if (id === "howBtn") {
+            currentPopup = document.getElementById("howPopup");
+            currentPopup.classList.add("active");
+            isPopUpOpen = true;
+            currentPopup.querySelector(".ok-btn").focus();
+          } else if (id === "aboutBtn") {
+            currentPopup = document.getElementById("aboutPopup");
+            currentPopup.classList.add("active");
+            isPopUpOpen = true;
+            currentPopup.querySelector(".ok-btn").focus();
+          }
+        }
+      });
+    });
   </script>
-  <script src="./assets/js/app.js" type="text/javascript"></script>
-  <script src="./assets/js/jiogames_jp.js"></script>
-  <script src="./assets/js/feature-controls.js"></script>
+
 </body>
 
 </html>

@@ -62,9 +62,7 @@
 
       // SoftRight → New Game
       case "SoftRight":
-        showToast("New Game Started 🔄", 1200, "#68DD24E6");
-        setTimeout(focusFirstEditable, 50);
-        game.newGame();
+        window.location.href = "index.html";
         break;
 
       // Clear cell
