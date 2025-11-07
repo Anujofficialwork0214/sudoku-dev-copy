@@ -56,12 +56,22 @@
 
       // SoftLeft → solve
       case "SoftLeft":
-        showToast("Here are solutions", 1200, "#68DD24E6");
-        game.solve();
+        // showToast("Here are solutions", 1200, "#68DD24E6");
+        if ( isRVReady ){
+          showAdRewarded();
+        } else {
+          game.solve();
+          console.log("Mid roll ad not ready");
+        }
         break;
 
       // SoftRight → New Game
       case "SoftRight":
+        if ( isAdReady ){
+          showAd();
+        } else {
+          console.log("Mid roll ad not ready");
+        }
         window.location.href = "index.html";
         break;
 

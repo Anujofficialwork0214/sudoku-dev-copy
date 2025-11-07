@@ -184,6 +184,12 @@ let currentDifficultyIndex =
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
           if (this.mistakeCount >= 5) {
+            postScore(0);
+            if ( isAdReady ){
+              showAd();
+            } else {
+              console.log("Mid roll ad not ready");
+            }
             gameOver();
           }
         }
@@ -212,6 +218,11 @@ let currentDifficultyIndex =
             "currentDifficultyIndex",
             currentDifficultyIndex
           );
+          if ( isAdReady ){
+            showAd();
+          } else {
+            console.log("Mid roll ad not ready");
+          }
           gameWon();
         }
       }

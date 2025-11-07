@@ -114,6 +114,7 @@ function callbacks() {
     } else if (adSpotKey == adSpotRewardedVideo && !isRewardUser) {
       rvSkipped();
     }
+    gameCacheAd();
   };
 
   JioAds.onAdFailedToLoad = function (adSpotKey, pDescription) {
@@ -174,6 +175,9 @@ function callbacks() {
 
 function GratifyReward() {
   console.log("JioGames: GratifyReward Game user here");
+  if(game){
+    game.solve();
+  }
   c2_callFunction("gratifyUser");
 }
 
