@@ -185,7 +185,7 @@ let currentDifficultyIndex =
           if (this.mistakeCount >= 5) {
           postScore(0);
             if ( isAdReady ) {
-              showJioGameAd("showAd");
+              showAd();
             }
             else{
               console.log("mid roll Ad not ready");
@@ -240,7 +240,7 @@ let currentDifficultyIndex =
             gameWonPopup.style.display = "flex";
             postScore(0);
             if ( isAdReady ) {
-              showJioGameAd("showAd");
+              showAd()
             }else{
               console.log("mid roll Ad not ready");
             }
@@ -561,36 +561,27 @@ let currentDifficultyIndex =
       return ok;
     },
 
+    solveDirectly: function (){
+      this.game.isSolvedDirectly = true;
+      const rows = this.solvedMatrix;
+
+      for (let r = 0; r < 9; r++) {
+        for (let c = 0; c < 9; c++) {
+          const input = this.game.cellMatrix[r][c];
+          input.value = rows[r][c];
+          input.classList.remove("invalid");
+        }
+      }
+      this.game.table.classList.add("valid-matrix");
+    },
+
     solve: function () {
       if (isRVReady) {
-        showJioGameAd("showAdRewarded", () => {
-          // After ad completes, solve the Sudoku
-          this.game.isSolvedDirectly = true;
-          const rows = this.solvedMatrix;
-
-          for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-              const input = this.game.cellMatrix[r][c];
-              input.value = rows[r][c];
-              input.classList.remove("invalid");
-            }
-          }
-          this.game.table.classList.add("valid-matrix");
-        });
+        showAdRewarded();
+        this.solveDirectly();
       } else {
-        console.log("Rewarded video ad not ready, solving directly");
-        // If ad SDK not ready, solve directly
-        this.game.isSolvedDirectly = true;
-          const rows = this.solvedMatrix;
-
-          for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-              const input = this.game.cellMatrix[r][c];
-              input.value = rows[r][c];
-              input.classList.remove("invalid");
-            }
-          }
-          this.game.table.classList.add("valid-matrix");
+        showPopupMessage("Rewarded Video Not Ready");
+        console.log("Rewarded video not ready");
       }
     },
   };
@@ -717,34 +708,4 @@ function updateDifficultyDisplay(currentDifficulty) {
   display.textContent = `${
     currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)
   }`;
-}
-
-function showJioGameAd(name, callback) {
-  if (!name || typeof name !== "string") {
-    console.warn("Invalid ad function name provided.");
-    return;
-  }
-
-  if (typeof window[name] === "function") {
-    try {
-      window[name](); // call the SDK function dynamically
-      console.log(`${name} called successfully.`);
-
-      // Hook callback to rewarded ad completion
-      if (callback) {
-        const originalOnEnd = window.onAdMediaEnd;
-        window.onAdMediaEnd = function (adSpot, completed, rewardAmount) {
-          if (completed) {
-            callback(); // run the solve after ad is completed
-          }
-          // Call original handler if needed
-          if (originalOnEnd) originalOnEnd(adSpot, completed, rewardAmount);
-        };
-      }
-    } catch (error) {
-      console.error(`Error calling ${name}:`, error);
-    }
-  } else {
-    console.warn(`Function ${name} does not exist in the SDK.`);
-  }
 }
