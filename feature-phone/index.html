@@ -87,11 +87,6 @@
             splash.style.display = "none";
           }, 100);
         }, 2000);
-
-        // Initialize game cache ad
-        if (typeof gameCacheAd === 'function') {
-          gameCacheAd();
-        }
       });
 
       // Function to show game screen
@@ -99,20 +94,10 @@
         homeScreen.style.display = "none";
         gameScreen.style.display = "block";
         isGameActive = true;
-        
-        // Focus first editable cell after game loads
-        setTimeout(() => {
-          const firstEditable = document.querySelector(".sudoku-container input:not(.disabled)");
-          if (firstEditable) {
-            firstEditable.focus();
-          } else {
-            // retry once more if DOM not ready
-            setTimeout(() => {
-              const retry = document.querySelector(".sudoku-container input:not(.disabled)");
-              if (retry) retry.focus();
-            }, 400);
-          }
-        }, 300);
+        game.start();
+        if (typeof gameCacheAd === 'function') {
+          gameCacheAd();
+        }
       }
 
       // Function to show home screen

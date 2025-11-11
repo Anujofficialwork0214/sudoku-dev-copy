@@ -536,6 +536,18 @@ let currentDifficultyIndex =
         input.readOnly = true;
         triggerEvent(input, "input"); // ensure matrices/validation update
       });
+      setTimeout(() => {
+          const firstEditable = document.querySelector(".sudoku-container input:not(.disabled)");
+          if (firstEditable) {
+            firstEditable.focus();
+          } else {
+            // retry once more if DOM not ready
+            setTimeout(() => {
+              const retry = document.querySelector(".sudoku-container input:not(.disabled)");
+              if (retry) retry.focus();
+            }, 400);
+          }
+        }, 300);
     },
 
     reset: function () {
@@ -621,6 +633,9 @@ function gameOver() {
   setTimeout(() => {
     game.reset();
     game.start();
+    if( typeof gameCacheAd === 'function'){
+      gameCacheAd();
+    }
   }, 2000); // restart after toast hides
 }
 function updateMistakeCounter(count) {
@@ -642,6 +657,9 @@ function gameWon() {
   setTimeout(() => {
     game.reset();
     game.start();
+    if( typeof gameCacheAd === 'function'){
+      gameCacheAd();
+    }
   }, 2000); // restart after toast hides
 }
 
