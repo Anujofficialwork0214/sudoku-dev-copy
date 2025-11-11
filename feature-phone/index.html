@@ -62,6 +62,18 @@
     </div>
   </div>
 
+  <!-- Watch Video Confirmation Popup -->
+  <div class="popup-container" id="videoConfirmPopup">
+    <div class="popup-content">
+      <h3>Watch Video?</h3>
+      <p>Do you want to watch a video to unlock the solution?</p>
+      <div class="popup-buttons">
+        <button class="btn yes-btn" id="yesWatchBtn" tabindex="0">Yes</button>
+        <button class="btn no-btn" id="noWatchBtn" tabindex="0">No</button>
+      </div>
+    </div>
+  </div>
+
   <script src="./assets/js/app.js" type="text/javascript"></script>
   <script src="./assets/js/jiogames_jp.js"></script>
 
@@ -70,12 +82,18 @@
     let isGameActive = false;
     let isPopUpOpen = false;
     let currentPopup = null;
+    let isVideoConfirmOpen = false;
+    let videoPopupSelectedIndex = 0;
 
     document.addEventListener("DOMContentLoaded", () => {
       const splash = document.getElementById("splash");
       const homeScreen = document.getElementById("homeScreen");
       const gameScreen = document.getElementById("gameScreen");
       const buttons = Array.from(document.querySelectorAll(".menu-container .home-btn"));
+      const videoConfirmPopup = document.getElementById("videoConfirmPopup");
+      const yesBtn = document.getElementById("yesWatchBtn");
+      const noBtn = document.getElementById("noWatchBtn");
+      const videoButtons = [yesBtn, noBtn];
       let index = 0;
 
       // Hide splash after 2s, then focus first button
@@ -88,6 +106,20 @@
           }, 100);
         }, 2000);
       });
+
+      // Function to show video confirmation popup
+      function showVideoConfirmPopup() {
+        videoConfirmPopup.classList.add("active");
+        isVideoConfirmOpen = true;
+        videoPopupSelectedIndex = 0;
+        videoButtons[videoPopupSelectedIndex].focus();
+      }
+
+      // Function to close video confirmation popup
+      function closeVideoConfirmPopup() {
+        videoConfirmPopup.classList.remove("active");
+        isVideoConfirmOpen = false;
+      }
 
       // Function to show game screen
       function showGameScreen() {
@@ -111,6 +143,39 @@
       // Home screen key navigation
       document.addEventListener("keyup", (e) => {
         const key = e.key;
+
+        // If video confirm popup is open, handle its navigation
+        if (isVideoConfirmOpen) {
+          if (key === "ArrowLeft") {
+            videoPopupSelectedIndex = 0;
+            videoButtons[videoPopupSelectedIndex].focus();
+          } else if (key === "ArrowRight") {
+            videoPopupSelectedIndex = 1;
+            videoButtons[videoPopupSelectedIndex].focus();
+          } else if (key === "Enter" || key === "OK") {
+            if (videoPopupSelectedIndex === 0) {
+              // Yes - Watch video
+              closeVideoConfirmPopup();
+              if (typeof isRVReady !== 'undefined' && isRVReady) {
+                if (typeof showAdRewarded === 'function') {
+                  showAdRewarded();
+                }
+              } else {
+                if (typeof showToast === 'function') {
+                  showToast("Rewarded video ad not ready");
+                }
+                console.log("Rewarded video ad not ready");
+              }
+            } else {
+              // No - Close popup
+              closeVideoConfirmPopup();
+            }
+          } else if (key === "Backspace") {
+            // Cancel and close popup
+            closeVideoConfirmPopup();
+          }
+          return;
+        }
 
         // If game is active, let game controls handle it
         if (isGameActive) {
@@ -176,16 +241,13 @@
           case "Enter":
             break;
 
-          // SoftLeft → solve
+          // SoftLeft → Show video confirmation popup
           case "SoftLeft":
-            if (typeof isRVReady !== 'undefined' && isRVReady) {
-              showAdRewarded();
-            } else {
-              if (typeof showToast === 'function') {
-                showToast("Rewarded video ad not ready");
-              }
-              console.log("Rewarded video ad not ready");
-            }
+            const videoConfirmPopup = document.getElementById("videoConfirmPopup");
+            videoConfirmPopup.classList.add("active");
+            isVideoConfirmOpen = true;
+            videoPopupSelectedIndex = 0;
+            document.getElementById("yesWatchBtn").focus();
             break;
 
           // SoftRight → Home
