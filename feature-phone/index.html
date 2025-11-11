@@ -34,7 +34,7 @@
     </div>
     <div class="container">
     </div>
-    <div class="double-exit-msg" id="exit-msg">Click twice to exit game</div>
+    <div class="double-exit-msg" id="exit-msg">Click twice to go home</div>
     <div id="toast"></div>
 
     <div id="controls">
@@ -229,11 +229,17 @@
       const DOUBLE_PRESS_DELAY = 500; // ms
 
       document.addEventListener("keydown", function (e) {
-        // Only handle game controls when game is active
-        if (!isGameActive) return;
-
         const key = e.key;
         const active = document.activeElement;
+
+        // Handle Backspace on home screen - allow default behavior (close app)
+        if (!isGameActive && key === "Backspace") {
+          window.close();
+          return;
+        }
+
+        // Only handle game controls when game is active
+        if (!isGameActive) return;
 
         switch (key) {
 
@@ -262,18 +268,21 @@
             }
             break;
 
-          // Clear cell
+          // Backspace on game screen - double press to go home
           case "Backspace":
+            e.preventDefault(); // Prevent default on game screen
             const now = Date.now();
             if (now - lastBackspaceTime < DOUBLE_PRESS_DELAY) {
-              // double press → exit game
+              // Double press → go to home screen
               if (typeof showToast === 'function') {
-                showToast("Exiting game...", 1200, "#68DD24E6");
+                showToast("Returning to home...", 1200, "#68DD24E6");
               }
-              console.log("Exit app"); // replace with real exit logic
+              if (typeof window.returnToHome === 'function') {
+                window.returnToHome();
+              }
               lastBackspaceTime = 0;
             } else {
-              e.preventDefault();
+              // Single press → clear cell
               if (active && !active.classList.contains("disabled")) {
                 active.value = "";
                 
@@ -285,6 +294,7 @@
               lastBackspaceTime = now;
               const msg = document.getElementById("exit-msg");
               if (msg) {
+                msg.textContent = "Click twice to go home";
                 msg.style.display = "block";
                 setTimeout(() => {
                   msg.style.display = "none";
