@@ -60,7 +60,7 @@
         if ( isRVReady ){
           showAdRewarded();
         } else {
-          game.solve();
+          showToast("Rewarded video ad not ready");
           console.log("Rewarded video ad not ready");
         }
         break;
