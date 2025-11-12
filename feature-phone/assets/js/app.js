@@ -1,7 +1,7 @@
 const difficultyOrder = ["easy", "medium", "hard", "pro", "expert"];
 let currentDifficultyIndex =
   Number(sessionStorage.getItem("currentDifficultyIndex")) || 0;
-
+ var isGameOver = false;
 (function (global) {
   "use strict";
 
@@ -154,6 +154,9 @@ let currentDifficultyIndex =
       var val = (input.value || "").trim();
       var row = input.row;
       var col = input.col;
+      if( isGameOver ){
+        return;
+      }
 
       // Normalize: keep only one allowed char
       if (!util.isDigit1to9(val)) {
@@ -183,7 +186,8 @@ let currentDifficultyIndex =
         if (!ok && !this.isSolvedDirectly) {
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
-          if (this.mistakeCount >= 5) {
+          if (this.mistakeCount == 5) {
+            isGameOver = true;
             postScore(0);
             if ( isAdReady ){
               showAd();
@@ -488,6 +492,7 @@ let currentDifficultyIndex =
 
     start: function () {
       updateDifficultyDisplay(difficultyOrder[currentDifficultyIndex]);
+      isGameOver = false;
       var arr = [],
         x = 0,
         values,
@@ -552,6 +557,7 @@ let currentDifficultyIndex =
 
     reset: function () {
       this.game.isSolvedDirectly = false;
+      isGameOver = false;
       this.game.resetGame();
     },
 
