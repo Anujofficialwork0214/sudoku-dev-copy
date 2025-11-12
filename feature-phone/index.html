@@ -119,6 +119,16 @@
       function closeVideoConfirmPopup() {
         videoConfirmPopup.classList.remove("active");
         isVideoConfirmOpen = false;
+        const firstEditable = document.querySelector(".sudoku-container input:not(.disabled)");
+        if (firstEditable) {
+          firstEditable.focus();
+        } else {
+          // retry once more if DOM not ready
+          setTimeout(() => {
+            const retry = document.querySelector(".sudoku-container input:not(.disabled)");
+            if (retry) retry.focus();
+          }, 400);
+        }
       }
 
       // Function to show game screen
@@ -126,6 +136,7 @@
         homeScreen.style.display = "none";
         gameScreen.style.display = "block";
         isGameActive = true;
+        game.reset();
         game.start();
         if (typeof gameCacheAd === 'function') {
           gameCacheAd();
@@ -154,7 +165,6 @@
             videoButtons[videoPopupSelectedIndex].focus();
           } else if (key === "Enter" || key === "OK") {
             if (videoPopupSelectedIndex === 0) {
-              // Yes - Watch video
               closeVideoConfirmPopup();
               if (typeof isRVReady !== 'undefined' && isRVReady) {
                 if (typeof showAdRewarded === 'function') {
