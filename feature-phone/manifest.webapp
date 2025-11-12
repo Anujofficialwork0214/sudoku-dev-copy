@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "version_code": 1,
+  "version": "3.0.0",
+  "version_code": 3,
   "name": "Sudoku",
   "package_name": "com.kaifoundry.sudokuJP",
   "description": "Fill every row, column and 3×3 box with digits 1–9 — sharpen your logic and beat the puzzle.",

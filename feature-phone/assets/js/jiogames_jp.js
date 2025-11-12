@@ -9,11 +9,11 @@ Do not edit any other part.
 
 //If you are using this script then remove JioGames related all parts from the index.html file.
 
-var adSpotInterstitial_key = "hfb92yut"; //Ex. : zbjnq9gs
-var adSpotRewardedVideo_key = "4m9bp08i"; //Ex. : 81xnt9bw
+var adSpotInterstitial_key = "vxue1kqp"; //Ex. : zbjnq9gs
+var adSpotRewardedVideo_key = "4b5pjwoh"; //Ex. : 81xnt9bw
 var package = "com.kaifoundry.sudokuJP"; //Ex. : com.vendor.gamename
 var gameName = "sudoku"; //Ex. : testgame
-var gameVersion = "V1.0.6"; //Ex. : V1.0.1
+var gameVersion = "V3.0.0"; //Ex. : V1.0.1
 var isAdReady = false;
 var isRVReady = false;
 var isRewardUser = false;
