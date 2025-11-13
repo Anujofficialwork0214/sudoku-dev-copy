@@ -580,7 +580,7 @@ let currentDifficultyIndex =
         showAdRewarded();
         this.solveDirectly();
       } else {
-        showPopupMessage("Solution not ready, Click after sometime.");
+        showPopupMessage("RV Ad not available.");
         console.log("Rewarded video not ready");
       }
     },
