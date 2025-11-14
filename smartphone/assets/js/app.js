@@ -183,13 +183,13 @@ let currentDifficultyIndex =
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
           if (this.mistakeCount >= 5) {
-          postScore(0);
             if ( isAdReady ) {
               showAd();
             }
             else{
               console.log("mid roll Ad not ready");
             }
+            postScore(0);
             gameOver();
           }
         }
