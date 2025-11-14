@@ -183,10 +183,10 @@ let currentDifficultyIndex =
           this.mistakeCount += 1;
           updateMistakeCounter(this.mistakeCount);
           if (this.mistakeCount >= 5) {
-            if ( isAdReady ) {
+            if (isAdReady) {
               showAd();
             }
-            else{
+            else {
               console.log("mid roll Ad not ready");
             }
             postScore(0);
@@ -236,14 +236,13 @@ let currentDifficultyIndex =
               "currentDifficultyIndex",
               currentDifficultyIndex
             );
-
-            gameWonPopup.style.display = "flex";
-            postScore(0);
-            if ( isAdReady ) {
+            if (isAdReady) {
               showAd()
-            }else{
+            } else {
               console.log("mid roll Ad not ready");
             }
+            postScore(0);
+            gameWonPopup.style.display = "flex";
           }
         }
       }
@@ -561,7 +560,7 @@ let currentDifficultyIndex =
       return ok;
     },
 
-    solveDirectly: function (){
+    solveDirectly: function () {
       this.game.isSolvedDirectly = true;
       const rows = this.solvedMatrix;
 
@@ -705,7 +704,6 @@ function updateMistakeCounter(count) {
 
 function updateDifficultyDisplay(currentDifficulty) {
   const display = document.getElementById("difficultyDisplay");
-  display.textContent = `${
-    currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)
-  }`;
+  display.textContent = `${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)
+    }`;
 }
